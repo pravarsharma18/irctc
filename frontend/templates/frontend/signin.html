@@ -36,6 +36,7 @@
 let form = $('#signin-form')
 let email = form.find("input[name='email']")
 let password = form.find("input[name='password']")
+let searchParams = new URLSearchParams(window.location.search)
 form.submit(async (e)=>{
     e.preventDefault()
     let props = {
@@ -53,7 +54,12 @@ form.submit(async (e)=>{
     if (res.ok){
         localStorage.setItem('accessToken', json.access)
         localStorage.setItem('refreshToken', json.refresh)
-        window.location.href = "/"
+        console.log(searchParams.get('next'))
+        if (searchParams.get('next')){
+            window.location.href = searchParams.get('next')    
+        }else{
+            window.location.href = "/"
+        }
     }else{
         alert(json.detail)
     }
