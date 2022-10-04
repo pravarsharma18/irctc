@@ -8,7 +8,6 @@ User = get_user_model()
 class EmailPhoneUsernameAuthenticationBackend(object):
     @staticmethod
     def authenticate(request, username=None, password=None):
-        print(username, password)
         try:
             user = User.objects.get(
                 Q(username=username) | Q(mobile_number=username) | Q(email=username)

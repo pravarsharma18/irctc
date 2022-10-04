@@ -23,7 +23,7 @@ class TrainViewSet(viewsets.ModelViewSet):
     permission_classes = [CreatePermission]
 
 
-class TrainDetails(generics.RetrieveAPIView):
+class TrainSchedule(generics.RetrieveAPIView):
     queryset = Train.objects.all()
     serializer_class = TrainSerializer
     lookup_field = 'train_number'

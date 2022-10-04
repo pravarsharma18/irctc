@@ -26,9 +26,7 @@ class LoginView(APIView):
     @staticmethod
     def post(request):
         try:
-            print(request.data)
             user = authenticate(request, username=request.data['username'], password=request.data['password'])
-            print("USER: ",user)
             if not user:
                 return Response({'detail': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
             login(request, user)

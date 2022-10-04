@@ -30,10 +30,10 @@ class UserJourney(TimeStampedModel):
     pnr = models.IntegerField()
     user = models.ForeignKey(User, related_name="passenger", on_delete=models.CASCADE)
     passengers = models.ManyToManyField(PassengerDetail, related_name='passengers', through='Reservation')
-    train = models.ForeignKey(Train, related_name="by_train", on_delete=models.CASCADE)
+    train = models.ForeignKey(Train, related_name="train", on_delete=models.CASCADE)
     status = models.CharField(choices=JourneyStatus.choices(), max_length=15)
-    source_station = models.ForeignKey(City, related_name="from_station", on_delete=models.CASCADE)
-    destination_station = models.ForeignKey(City, related_name="to_station", on_delete=models.CASCADE)
+    source_station = models.ForeignKey(City, related_name="source_station", on_delete=models.CASCADE)
+    destination_station = models.ForeignKey(City, related_name="destination_station", on_delete=models.CASCADE)
     boggy_number = models.CharField(max_length=50, null=True, blank=True)
     seat_number = models.CharField(max_length=50, null=True, blank=True)
 
