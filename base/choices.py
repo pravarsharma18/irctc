@@ -12,7 +12,7 @@ class Days(Enum):
 
     @classmethod
     def choices(cls):
-        return tuple((i.name, i.value) for i in cls)
+        return tuple((day.name, day.value) for day in cls)
 
 
 class TrainType(Enum):
@@ -21,7 +21,7 @@ class TrainType(Enum):
 
     @classmethod
     def choices(cls):
-        return tuple((i.name, i.value) for i in cls)
+        return tuple((train_type.name, train_type.value) for train_type in cls)
 
 
 class JourneyStatus(Enum):
@@ -31,7 +31,7 @@ class JourneyStatus(Enum):
 
     @classmethod
     def choices(cls):
-        return tuple((i.name, i.value) for i in cls)
+        return tuple((j_status.name, j_status.value) for j_status in cls)
 
 
 class BirthPreference(Enum):
@@ -42,7 +42,7 @@ class BirthPreference(Enum):
 
     @classmethod
     def choices(cls):
-        return tuple((i.name, i.value) for i in cls)
+        return tuple((birth_pref.name, birth_pref.value) for birth_pref in cls)
 
 class Gender(Enum):
     MALE = "Male"
@@ -51,7 +51,7 @@ class Gender(Enum):
 
     @classmethod
     def choices(cls):
-        return tuple((i.name, i.value) for i in cls)
+        return tuple((gender.name, gender.value) for gender in cls)
 
 
 class Coaches(Enum):
@@ -62,4 +62,4 @@ class Coaches(Enum):
 
     @classmethod
     def choices(cls):
-        return tuple((i.name, i.value) for i in cls)
+        return tuple((coach.name, coach.value) for coach in cls)
