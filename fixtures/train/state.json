@@ -1,0 +1,56 @@
+[
+{
+    "model": "train.state",
+    "pk": 1,
+    "fields": {
+        "created": "2022-09-26T10:30:53.917Z",
+        "modified": "2022-09-26T10:30:53.917Z",
+        "name": "Rajasthan"
+    }
+},
+{
+    "model": "train.state",
+    "pk": 2,
+    "fields": {
+        "created": "2022-09-26T10:31:01.176Z",
+        "modified": "2022-09-26T10:31:01.176Z",
+        "name": "Gujarat"
+    }
+},
+{
+    "model": "train.state",
+    "pk": 3,
+    "fields": {
+        "created": "2022-09-26T10:31:05.949Z",
+        "modified": "2022-09-26T10:31:05.949Z",
+        "name": "Haryana"
+    }
+},
+{
+    "model": "train.state",
+    "pk": 4,
+    "fields": {
+        "created": "2022-09-26T10:31:15.711Z",
+        "modified": "2022-09-26T10:33:44.357Z",
+        "name": "Uttar Pradesh"
+    }
+},
+{
+    "model": "train.state",
+    "pk": 5,
+    "fields": {
+        "created": "2022-09-26T10:31:22.722Z",
+        "modified": "2022-09-26T10:31:22.722Z",
+        "name": "West Bengal"
+    }
+},
+{
+    "model": "train.state",
+    "pk": 6,
+    "fields": {
+        "created": "2022-09-26T10:31:28.835Z",
+        "modified": "2022-09-26T10:31:28.835Z",
+        "name": "Maharastra"
+    }
+}
+]

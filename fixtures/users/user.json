@@ -1,0 +1,68 @@
+[
+{
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$DjZnouqmudJhkVKvvFh24f$NAsmsuzou+utI0v6nci6Zprr4jv25PePFPJLmcV1ubA=",
+        "last_login": "2022-09-27T04:41:04.181Z",
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2022-09-26T09:41:09Z",
+        "email": "a@gmail.com",
+        "mobile_number": "9414472171",
+        "date_of_birth": "1968-07-15",
+        "age": "54",
+        "is_superuser": true,
+        "is_senior_citizen": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$2825pIYJd0LWi4PMrvjFuP$momB0pjxFLVxg56pL8chqsdH4bbcuJdF21OGxq5aMyY=",
+        "last_login": null,
+        "username": "pravar",
+        "first_name": "p",
+        "last_name": "s",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-09-26T12:30:40.188Z",
+        "email": "a1@gmail.com",
+        "mobile_number": "9414472170",
+        "date_of_birth": "2000-07-19",
+        "age": "22",
+        "is_superuser": false,
+        "is_senior_citizen": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.user",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$acp6W9me1VrkX6mtPO4mhW$veGsaG9nI0SEMFwNYF0cub8WcfwZVoOzLMbvFeFFLJg=",
+        "last_login": null,
+        "username": "pravar1",
+        "first_name": "p",
+        "last_name": "s",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2022-09-26T12:31:24.663Z",
+        "email": "a2@gmail.com",
+        "mobile_number": "9414472172",
+        "date_of_birth": "2000-07-19",
+        "age": "22",
+        "is_superuser": false,
+        "is_senior_citizen": false,
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

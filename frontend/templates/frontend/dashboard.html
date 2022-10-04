@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="content d-flex flex-column flex-column-fluid fs-6 container" id="kt_content" style="margin-right:unset;">
+    <div class="container" id="kt_content_container">
+        <!--begin::Row-->
+        <div class="row g-xl-8">
+            <!--begin:::Col-->
+            <div class="col-xxl-12">
+                <!--begin::List Widget 3-->
+                <div class="card card-flush mb-5 mb-xl-8">
+                    <!--begin::Card header-->
+                    <div class="card-header">
+                        <!--begin::Card title-->
+                        <h3 class="card-title fw-boldest">Search Train</h3>
+                        <!--end::Card title-->
+                    </div>
+                    <!--end::Card header-->
+                    <!--begin::Body-->
+                    <div class="card-body pt-1">
+                        <!--begin::Tabs-->
+                        <input type="text" id="search-train" class="mb-10 form-control form-control-solid" placeholder="Search Your Train"/>
+                        
+                        <!--end::Tabs-->
+                        <div class="tab-content">
+                            <!--begin::Tab pane-->
+                            <div class="tab-pane fade active show" id="kt_lists_widget_3_tab_pane_1">
+                                <!--begin::Section-->
+                                <div class="mb-7">
+                                    <div class="fw-bold fs-4 text-gray-400 mb-5 mt-10" id="search-param"></div>
+                                    <div id="content"></div>
+                                </div>
+                                <!--end::Section-->
+                            </div>
+                            <!--end::Tab pane-->
+                            <!--begin::Tab pane-->
+                            <div class="tab-pane fade" id="kt_lists_widget_3_tab_pane_2" style="position: relative;">
+                                <!--begin::Chart-->
+                                <div id="kt_lists_widget_3_chart" style="height: 350px; min-height: 365px;"><div id="apexcharts5q965cmy" class="apexcharts-canvas apexcharts5q965cmy" style="width: 0px; height: 350px;"><svg id="SvgjsSvg1148" width="0" height="350" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" class="apexcharts-svg" xmlns:data="ApexChartsNS" transform="translate(0, 0)" style="background: transparent;"><g id="SvgjsG1151" class="apexcharts-annotations"></g><g id="SvgjsG1150" class="apexcharts-inner apexcharts-graphical"><defs id="SvgjsDefs1149"></defs></g></svg><div class="apexcharts-legend"></div></div></div>
+                                <!--end::Chart-->
+                            <div class="resize-triggers"><div class="expand-trigger"><div style="width: 1px; height: 1px;"></div></div><div class="contract-trigger"></div></div></div>
+                            <!--end::Tab pane-->
+                        </div>
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::List Widget 3-->
+            </div>
+            <!--end:::Col-->
+        </div>
+        <!--end::Row-->
+    </div>
+</div>
+
+{% endblock content %}
+
+
+{% block js %}
+<script>
+    let ms = $("#search-train").magicSuggest({
+        method: 'get',
+        cls: 'magicsearch form-control',
+        queryParam: 'search',
+        typeDelay: 0,
+        allowDuplicates: false,
+        data: '/api/train/',
+    });
+    $("#search-train").on('keypress', function(){
+        $(ms).on('load', function(e,m){
+            $('#content').html()
+            data = ms.getData()
+            $('#search-param').html(ms.getValue())
+            if (data.length >0){
+                $('#content').html(
+                    data.map((e)=>{
+                        return `
+                        <div class="overflow-auto mb-10">
+                            <!--begin::Item-->
+                            <div class="d-flex align-items-center mb-7">
+                                <!--begin::List content-->
+                                <div class="d-flex flex-column min-w-150px me-4">
+                                    <a href="javascript:void(0);" data-id="${e.train_number}" class="train-detail fw-boldest text-gray-800 text-hover-primary fs-4">${e.name}</a>
+                                    <div class="fw-bold fs-6 text-gray-400">${e.train_number}</div>
+                                </div>
+                                <!--end::List content-->
+                                <!--begin::Price-->
+                                <div class="ms-auto bg-light fw-bolder py-1 px-3"><p>${e.station_name}</p>Arrival: ${e.arrival_time}</div>
+                                <div class="ms-auto bg-light fw-bolder py-1 px-3"><p>${e.station_name}</p>Departure: ${e.departure_time}</div>
+                                <!--end::Price-->
+                            </div>
+                            <!--end::Item-->
+                            
+                        </div>`
+                    })
+                )
+                $('.train-detail').click(async (e)=>{
+                    let trainNumber = e.target.getAttribute('data-id')
+                    let res = await _$.Fetch(`/api/train_details/${trainNumber}/`)
+                    let body = `
+                        ${res.map(e=>{
+                            return `<div class="overflow-auto mb-10">
+                                <!--begin::Item-->
+                                <div class="d-flex align-items-center mb-7">
+                                    <!--begin::List content-->
+                                    <div class="d-flex flex-column min-w-150px me-4">
+                                        <a href="javascript:void(0);" data-id="${e.train_number}" class="train-detail fw-boldest text-gray-800 text-hover-primary fs-4">${e.name}</a>
+                                        <div class="fw-bold fs-6 text-gray-400">${e.train_number}</div>
+                                    </div>
+                                    <!--end::List content-->
+                                    <!--begin::Price-->
+                                    <div class="ms-auto bg-light fw-bolder py-1 px-3">${e.station_name}<br />Arrival: ${e.arrival_time}<br />Distance: ${e.distance}</div>
+                                    <div class="ms-auto bg-light fw-bolder py-1 px-3">${e.station_name}<br />Departure: ${e.departure_time}<br />Distance: ${e.distance}</div>
+                                    <!--end::Price-->
+                                </div>
+                                <!--end::Item-->
+                                
+                            </div>`
+                        }).join('\n')}
+                    `
+                    console.log(body)
+                    modal_ = _$.crModal(`Detail - ${trainNumber}`, body, type=0, large=true)
+                })
+            }else{
+                $('#content').html("<p class='text-center'>No Train Found</p>")
+            }
+        });
+    })
+</script>
+{% endblock js %}

@@ -1,0 +1,36 @@
+[
+{
+    "model": "train.train",
+    "pk": 1,
+    "fields": {
+        "created": "2022-09-26T10:40:40.478Z",
+        "modified": "2022-09-26T10:41:00.321Z",
+        "name": "Ashram Express",
+        "train_num": 23701,
+        "source": 4,
+        "source_time": "18:40:19",
+        "destination": 2,
+        "destination_time": "06:40:26",
+        "total_time_in_hours": "12",
+        "runs_on": "MONDAY,WEDNESDAY,FRIDAY",
+        "type": "FAST"
+    }
+},
+{
+    "model": "train.train",
+    "pk": 2,
+    "fields": {
+        "created": "2022-09-26T10:41:55.112Z",
+        "modified": "2022-09-26T10:41:55.112Z",
+        "name": "Train 1",
+        "train_num": 83013,
+        "source": 10,
+        "source_time": "10:41:37",
+        "destination": 6,
+        "destination_time": "06:20:00",
+        "total_time_in_hours": "15",
+        "runs_on": "TUESDAY,THURSDAY",
+        "type": "SUPERFAST"
+    }
+}
+]

@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-dark text-light"><a href="/">Home</a></div>
+<div class="card card-custom h-100">
+     <form class="mt-20 container" id="signin-form">
+         <div class="display-4 text-center">
+             SignIn
+         </div>
+         <div class="card-body">
+           <div class="form-group mb-8">
+                <div class="alert alert-custom alert-default" role="alert">
+                    <div class="alert-icon"><i class="flaticon-warning text-primary"></i></div>
+                </div>
+           </div>
+           <div class="form-group">
+                <label>Email address/Username/Mobile Number <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-solid" name="email" placeholder="Enter Email address or User Name or Mobile Number"/>
+           </div>
+           <div class="form-group mt-10">
+                <label for="exampleInputPassword1">Password <span class="text-danger">*</span></label>
+                <input type="password" name="password" class="form-control form-control-solid" id="exampleInputPassword1" placeholder="Password"/>
+           </div>
+           <span>Register <a href="/signup/">here</a></span>
+         </div>
+         <div class="mx-5">
+             <button type="submit" class="btn btn-primary mr-2">Submit</button>
+         </div>
+     </form>
+</div>
+{% endblock content %}
+
+
+{% block js %}
+<script>
+let form = $('#signin-form')
+let email = form.find("input[name='email']")
+let password = form.find("input[name='password']")
+form.submit(async (e)=>{
+    e.preventDefault()
+    let props = {
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json',
+        },
+        body:{
+            username:email.val(), 
+            password:password.val()
+        }
+    }
+    
+    let [res, json] = await _$.Fetch('/users/login/', props=props, isArray=true)
+    if (res.ok){
+        localStorage.setItem('accessToken', json.access)
+        localStorage.setItem('refreshToken', json.refresh)
+        window.location.href = "/"
+    }else{
+        alert(json.detail)
+    }
+    
+    
+})
+
+</script>
+{% endblock js %}

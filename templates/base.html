@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+	<!--begin::Head-->
+	<head><base href="">
+		<meta charset="utf-8" />
+		<title>IRCTC | Train Booking Platform</title>
+		<meta name="description" content="Rider admin dashboard live demo. Check out all the features of the admin panel. A large number of settings, additional services and widgets." />
+		<meta name="keywords" content="Rider, bootstrap, bootstrap 5, dmin themes, free admin themes, bootstrap admin, bootstrap dashboard" />
+		<link rel="canonical" href="Https://preview.keenthemes.com/rider-free" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="shortcut icon" href="{% static 'assets/media/favicon.ico' %}" />
+		<!--begin::Fonts-->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
+		<!--end::Fonts-->
+		<!--begin::Global Stylesheets Bundle(used by all pages)-->
+		<link href="{% static 'assets/plugins/global/plugins.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'assets/css/style.bundle.css' %}" rel="stylesheet" type="text/css" />
+		<link href="{% static 'assets/css/magicsuggest.css' %}" rel="stylesheet">
+
+		<!--end::Global Stylesheets Bundle-->
+	</head>
+	<!--end::Head-->
+	<!--begin::Body-->
+	<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed aside-fixed">
+		<!--begin::Main-->
+		{% if dashboard %}
+			{% include 'left_menu_bar.html' %}
+		{% endif %}
+		<!--end::Main-->
+		
+		{% block content %}
+		{% endblock content %}
+		
+		<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+		<script src="{% static 'assets/plugins/global/plugins.bundle.js' %}"></script>
+		<script src="{% static 'assets/js/scripts.bundle.js' %}"></script>
+		<!--end::Global Javascript Bundle-->
+		<!--begin::Page Custom Javascript(used by this page)-->
+		<!-- for axios -->
+		<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+		<script src="{% static 'assets/js/custom/widgets.js' %}"></script>
+		<script src="{% static 'assets/js/custom/index.js' %}"></script>
+		<script src="{% static 'assets/js/magicsuggest.js' %}"></script>
+		
+		{% block js %}
+		{% endblock js %}
+		<script>
+			$('#signout').click(async (e)=>{
+				e.preventDefault();
+				let keysToRemove = ["accessToken", "refreshToken"];
+				for (key of keysToRemove) {
+					localStorage.removeItem(key);
+				}
+				let [res, json] =  await _$.Fetch('/users/logout/', {method:'POST'}, isArray=true)
+				window.location.href = "/signin/"
+			})
+			</script>
+		<!--end::Page Custom Javascript-->
+		<!--end::Javascript-->
+	</body>
+	<!--end::Body-->
+</html>
