@@ -16,7 +16,8 @@ class PassengerDetail(TimeStampedModel):
     last_name = models.CharField(max_length=255)
     age = models.IntegerField()
     gender = models.CharField(max_length=15, choices=Gender.choices())
-    birth_preference = models.CharField(max_length=15, choices=BirthPreference.choices(), null=True, blank=True)
+    birth_preference = models.CharField(
+        max_length=15, choices=BirthPreference.choices(), null=True, blank=True)
 
     def __str__(self) -> str:
         return self.first_name
@@ -27,16 +28,21 @@ class PassengerDetail(TimeStampedModel):
 
 
 class UserJourney(TimeStampedModel):
-    pnr = models.IntegerField()
-    user = models.ForeignKey(User, related_name="passenger", on_delete=models.CASCADE)
-    passengers = models.ManyToManyField(PassengerDetail, related_name='passengers', through='Reservation')
-    train = models.ForeignKey(Train, related_name="train", on_delete=models.CASCADE)
+    pnr = models.IntegerField(null=True, blank=True)
+    user = models.ForeignKey(
+        User, related_name="passenger", on_delete=models.CASCADE)
+    passengers = models.ManyToManyField(
+        PassengerDetail, related_name='passengers', through='Reservation')
+    train = models.ForeignKey(
+        Train, related_name="train", on_delete=models.CASCADE)
+    date = models.DateField()
     status = models.CharField(choices=JourneyStatus.choices(), max_length=15)
-    source_station = models.ForeignKey(City, related_name="source_station", on_delete=models.CASCADE)
-    destination_station = models.ForeignKey(City, related_name="destination_station", on_delete=models.CASCADE)
+    source_station = models.ForeignKey(
+        City, related_name="source_station", on_delete=models.CASCADE)
+    destination_station = models.ForeignKey(
+        City, related_name="destination_station", on_delete=models.CASCADE)
     boggy_number = models.CharField(max_length=50, null=True, blank=True)
     seat_number = models.CharField(max_length=50, null=True, blank=True)
-
 
     class Meta:
         verbose_name = "User Journey"
@@ -44,15 +50,15 @@ class UserJourney(TimeStampedModel):
 
 
 class Reservation(TimeStampedModel):
-    passenger_detail = models.ForeignKey(PassengerDetail, on_delete=models.CASCADE)
+    passenger_detail = models.ForeignKey(
+        PassengerDetail, on_delete=models.CASCADE)
     user_journey = models.ForeignKey(UserJourney, on_delete=models.CASCADE)
-
 
 
 @receiver(pre_save, sender=UserJourney)
 def my_callback(sender, instance, *args, **kwargs):
     if not instance.pnr:
-        instance.pnr = random.randint(10000000,100000000)
+        instance.pnr = random.randint(10000000, 100000000)
 
 
 class WaitingList(TimeStampedModel):
@@ -73,10 +79,12 @@ class ReservationChartForTrain(TimeStampedModel):
     total_seats = models.IntegerField()
     vacant_seats = models.IntegerField()
     waiting_list = models.ManyToManyField(WaitingList, blank=True)
+    date = models.DateField()
 
     def __str__(self):
-        return str(self.user_journey)#.user.first_name
+        return str(self.user_journey)  # .user.first_name
 
     class Meta:
         verbose_name = "Reservation Chart For Train"
         verbose_name_plural = "Reservation Chart For Trains"
+        ordering = ['date']

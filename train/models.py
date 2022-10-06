@@ -19,7 +19,8 @@ class State(TimeStampedModel):
 
 class City(TimeStampedModel):
     name = models.CharField(max_length=255)
-    state = models.ForeignKey(State, related_name="state", on_delete=models.CASCADE)
+    state = models.ForeignKey(
+        State, related_name="state", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -29,10 +30,26 @@ class City(TimeStampedModel):
         verbose_name_plural = "Cities"
         ordering = ['name']
 
+
+class Station(models.Model):
+    name = models.CharField(max_length=255)
+    city = models.ForeignKey(City, related_name='city',
+                             on_delete=models.CASCADE)
+    short_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Station"
+        verbose_name_plural = "Stations"
+
+
 class TrainQuerySet(models.QuerySet):
 
     def singles(self):
-        return self.filter().distinct('train_number')
+        return self.filter().distinct('number')
+
 
 class TrainManager(models.Manager):
 
@@ -45,26 +62,26 @@ class TrainManager(models.Manager):
 
 class Train(TimeStampedModel):
     name = models.CharField(max_length=255)
-    train_number = models.IntegerField(null=True, blank=True)
-    station_code = models.CharField(max_length=10)
-    station_name = models.CharField(max_length=255)
-    arrival_time = models.TimeField()
-    departure_time = models.TimeField()
-    source_station = models.CharField(max_length=255)
-    source_short_name = models.CharField(max_length=10)
-    destination_station = models.CharField(max_length=255)
-    destination_short_name = models.CharField(max_length=10)
-    sequence = models.IntegerField(null=True, blank=True)
-    distance = models.IntegerField(null=True, blank=True)
+    number = models.IntegerField(null=True, blank=True)
+    station = models.ManyToManyField(
+        Station, related_name="stations", through='TrainWithStations')
     type = models.CharField(max_length=15, choices=TrainType.choices())
     runs_on = MultiSelectField(choices=Days.choices())
 
     objects = TrainManager()
 
     def __str__(self):
-        return str(self.train_number)
+        return str(self.number)
 
     class Meta:
         verbose_name = "Train"
         verbose_name_plural = "Trains"
-        ordering = ['train_number', 'sequence']
+        ordering = ['number']
+
+
+class TrainWithStations(TimeStampedModel):
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
+    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    sequence = models.IntegerField()
+    distance = models.DecimalField(max_digits=5, decimal_places=2)
+    base_fare = models.DecimalField(max_digits=5, decimal_places=2)

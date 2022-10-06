@@ -35,5 +35,5 @@ class AdminWaitingList(admin.ModelAdmin):
 
 @admin.register(ReservationChartForTrain)
 class AdminReservationChartForTrain(admin.ModelAdmin):
-    list_display = ['train', 'total_seats', 'vacant_seats']
+    list_display = ['train', 'total_seats', 'vacant_seats', 'date']
     list_select_related =  ('train',)

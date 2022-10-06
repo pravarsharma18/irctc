@@ -1,6 +1,11 @@
 from enum import Enum
 
 
+class Constants:
+    BOOKING_FOR_NEXT_DAYS = 10
+    TOTAL_SEATS = 150
+
+
 class Days(Enum):
     MONDAY = "Monday"
     TUESDAY = "Tuesday"
@@ -44,6 +49,7 @@ class BirthPreference(Enum):
     def choices(cls):
         return tuple((birth_pref.name, birth_pref.value) for birth_pref in cls)
 
+
 class Gender(Enum):
     MALE = "Male"
     FEMALE = "Female"
@@ -63,3 +69,18 @@ class Coaches(Enum):
     @classmethod
     def choices(cls):
         return tuple((coach.name, coach.value) for coach in cls)
+
+
+class Fare(Enum):
+    AC1_SUPERFAST = 2080
+    AC1_FAST = 1880
+    AC2_SUPERFAST = 1500
+    AC2_FAST = 1200
+    AC3_SUPERFAST = 1200
+    AC3_FAST = 800
+    SLEEPER_SUPERFAST = 800
+    SLEEPER_FAST = 400
+
+    @classmethod
+    def choices(cls):
+        return tuple((fare.name, fare.value) for fare in cls)

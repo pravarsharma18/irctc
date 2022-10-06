@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import State, City, Train
+from .models import State, City, Station, Train, TrainWithStations
 
 
 @admin.register(State)
@@ -20,7 +20,17 @@ class AdminState(admin.ModelAdmin):
 class AdminCity(admin.ModelAdmin):
     list_display = ['name', 'state']
 
+@admin.register(Station)
+class AdminStation(admin.ModelAdmin):
+    list_display = ['id', 'name', 'city']
+
+
+class AdminTrainWithStations(admin.TabularInline):
+    model = TrainWithStations
 
 @admin.register(Train)
 class AdminTrain(admin.ModelAdmin):
-    list_display = ['name', 'train_number', 'sequence']
+    list_display = ['name', 'number']
+    inlines = [
+        AdminTrainWithStations,
+    ]

@@ -9,8 +9,8 @@ from rest_framework import status
 
 from .models import Train
 from .permissions import CreatePermission
-from .serializers import TrainSerializer, TrainDetailSerializer
-from .filters import  TrainFilters
+from .serializers import TrainSerializer
+from .filters import TrainFilters
 
 
 class TrainViewSet(viewsets.ModelViewSet):
@@ -18,22 +18,9 @@ class TrainViewSet(viewsets.ModelViewSet):
     serializer_class = TrainSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = TrainFilters
-    search_fields = ['name', 'train_number', 'station_name', 'station_code','destination_station', 'destination_short_name']
-    distinct = True
+    search_fields = ['name', 'number', 'station__name']
     permission_classes = [CreatePermission]
-
-
-class TrainSchedule(generics.RetrieveAPIView):
-    queryset = Train.objects.all()
-    serializer_class = TrainSerializer
-    lookup_field = 'train_number'
-
-    def get(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(train_number=kwargs['train_number'])
-        if not queryset.exists():
-            return Response({"detail":"Train not found."}, status=status.HTTP_404_NOT_FOUND)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    lookup_field = 'number'
 
 
 def get_search(request):
