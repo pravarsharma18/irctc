@@ -23,9 +23,9 @@ class TrainSerializer(serializers.ModelSerializer):
     stations = serializers.SerializerMethodField()
 
     def get_stations(self, obj):
-        t = TrainWithStations.objects.filter(train=obj)
-        ser = TrainWithStationsSerializer(t, many=True).data
-        return ser
+        stations = TrainWithStations.objects.filter(train=obj)
+        serializer = TrainWithStationsSerializer(stations, many=True).data
+        return serializer
 
     class Meta:
         model = Train

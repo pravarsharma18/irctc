@@ -63,7 +63,8 @@ INSTALLED_APPS = [
 CELERY_RESULT_BACKEND = "django-db"
 
 # This configures Redis as the datastore between Django + Celery
-CELERY_BROKER_URL = config('CELERY_BROKER_REDIS_URL', default='redis://localhost:6379')
+CELERY_BROKER_URL = config('CELERY_BROKER_REDIS_URL',
+                           default='redis://localhost:6379')
 # if you out to use os.environ the config is:
 # CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', 'redis://localhost:6379')
 
@@ -110,9 +111,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'irctc',
         'USER': 'pgadmin',
-        'PASSWORD':'trootech1234',
-        'HOST':'localhost',
-        'PORT':5432
+        'PASSWORD': 'trootech1234',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
 }
 
@@ -173,8 +174,8 @@ AUTHENTICATION_BACKENDS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.BasicAuthentication',
-    #     # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

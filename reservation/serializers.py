@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import PassengerDetail, Reservation, UserJourney, ReservationChartForTrain, WaitingList
 from datetime import datetime, timedelta
 from base.choices import Constants, JourneyStatus
+from django.db import transaction
 
 
 class PassengerDetailSerializer(serializers.ModelSerializer):
@@ -14,10 +15,15 @@ class PassengerDetailSerializer(serializers.ModelSerializer):
 
 class UserJourneySerializer(serializers.ModelSerializer):
     passengers = serializers.PrimaryKeyRelatedField(queryset=PassengerDetail.objects.all(),
-                                                    many=True)
+                                                    many=True, write_only=True)
     user = serializers.StringRelatedField(source="user.email")
     status = serializers.StringRelatedField(read_only=True)
+    passengers_list = serializers.SerializerMethodField()
 
+    def get_passengers_list(self, obj):
+        return PassengerDetailSerializer(obj.passengers.all(), many=True).data
+
+    @transaction.atomic
     def create(self, validated_data):
         print("validated_datavalidated_data", validated_data)
         max_date = datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)
@@ -27,42 +33,73 @@ class UserJourneySerializer(serializers.ModelSerializer):
 
         reservation_qs = ReservationChartForTrain.objects.filter(
             date=validated_data['date'], train=validated_data['train'])
-        if reservation_qs.exists():
-            if reservation_qs.first().vacant_seats > 0:
+        if not reservation_qs.exists():
+            raise serializers.ValidationError(
+                {"detail": f"{validated_data['train'].name} numbered {validated_data['train'].number} \
+                            does not runs on {validated_data['date'].strftime('%A')}"})
+        else:
+            reservation_obj = reservation_qs.first()
+            new_journey = UserJourney(**validated_data)
+            new_journey.save()
+            if reservation_obj.vacant_seats > 0:
+                passengers_data = validated_data.pop('passengers')
                 validated_data['status'] = JourneyStatus.CONFIRMED.name
+
+                validated_data['user'] = self.context['request'].user
+
+                for passenger in passengers_data:
+                    new_journey.passengers.add(passenger)
+                    reservation_obj.vacant_seats -= 1
+                reservation_obj.user_journey.add(new_journey)
+                reservation_obj.save()
             else:
                 validated_data['status'] = JourneyStatus.WAITING.name
                 # waiting list logic
                 # WaitingList.objects.create()
 
-        validated_data['user'] = self.context['request'].user
-        new_journey = UserJourney(**validated_data)
-        new_journey.save()
         return new_journey
 
     class Meta:
         model = UserJourney
         fields = ['id', 'date', 'user', 'status', 'passengers',
-                  'train', 'source_station', 'destination_station']
+                  'train', 'source_station', 'destination_station', 'passengers_list']
 
 
 class ReservationSerializer(serializers.ModelSerializer):
-    passenger_detail = serializers.PrimaryKeyRelatedField(queryset=PassengerDetail.objects.all(),
-                                                          many=True)
+    # passenger_detail = serializers.PrimaryKeyRelatedField(queryset=PassengerDetail.objects.all(),
+    #                                                       many=True, read_only=True)
 
     class Meta:
         model = Reservation
-        fields = ['id', 'passenger_detail', 'user_journey']
+        fields = ['id', 'user_journey']
+        depth = True
 
 
 class ReservationChartForTrainSerializer(serializers.ModelSerializer):
+    train = serializers.SerializerMethodField()
     # vacant_seats = serializers.IntegerField(read_only=True)
     # total_seats = serializers.IntegerField(read_only=True)
-    # user_journey = serializers.PrimaryKeyRelatedField(queryset=UserJourney.objects.all())
+    passengers = serializers.SerializerMethodField()
 
     # def get_user_journey(self, obj):
     #     print(obj.user_journey.all())
     #     return obj.user_journey.all()
+
+    def get_train(self, obj):
+        return {
+            "name": obj.train.name,
+            "number": obj.train.number
+        }
+
+    def get_passengers(sel, obj):
+        return UserJourneySerializer(obj.user_journey.all(), many=True).data
+        print("*"*50)
+        print(a)
+        print("*"*50)
+
+        return {
+            "passengers": PassengerDetailSerializer(a.user_journey.all(), many=True).data
+        }
 
     def create(self, validated_data):
         print(validated_data)
@@ -78,5 +115,5 @@ class ReservationChartForTrainSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReservationChartForTrain
-        fields = ['id', 'train', 'date', 'vacant_seats',
-                  'total_seats', 'user_journey']
+        fields = ['id', 'train', 'date', 'total_seats',
+                  'vacant_seats', 'passengers']

@@ -62,8 +62,8 @@ def my_callback(sender, instance, *args, **kwargs):
 
 
 class WaitingList(TimeStampedModel):
-    user_journey = models.ManyToManyField(UserJourney)
-    waiting_number = models.IntegerField()
+    user_journey = models.ManyToManyField(
+        UserJourney, through="WaitingDetailsUser")
 
     def __str__(self):
         return self.user_journey.user.first_name
@@ -71,6 +71,12 @@ class WaitingList(TimeStampedModel):
     class Meta:
         verbose_name = "Waiting List"
         verbose_name_plural = "Waiting Lists"
+
+
+class WaitingDetailsUser(models.Model):
+    waiting_list = models.ForeignKey(WaitingList, on_delete=models.CASCADE)
+    user_journey = models.ForeignKey(UserJourney, on_delete=models.CASCADE)
+    waiting_number = models.IntegerField()
 
 
 class ReservationChartForTrain(TimeStampedModel):
