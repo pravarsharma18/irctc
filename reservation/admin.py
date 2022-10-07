@@ -25,21 +25,21 @@ class AdminUserJourney(admin.ModelAdmin):
 
 
 class AdminWaitingDetailsUser(admin.TabularInline):
-    # list_display = ['first_name', 'last_name', 'age', 'birth_preference']
+    # list_display = ['waiting_list', 'user_journey', 'waiting_number']
     model = WaitingDetailsUser
     # extra = 1
 
 
 @admin.register(WaitingList)
 class AdminWaitingList(admin.ModelAdmin):
-    list_display = ['user_journey']
+    # list_display = ['user_journey']
 
     inlines = [
         AdminWaitingDetailsUser,
     ]
 
-    def user_journey(self, obj):
-        return "\n".join([a.first_name for a in obj.user_journey_set.all()])
+    # def user_journey(self, obj):
+    #     return "\n".join([a.user.first_name for a in obj.user_journey_set.all()])
 
 
 @admin.register(ReservationChartForTrain)

@@ -65,9 +65,6 @@ class WaitingList(TimeStampedModel):
     user_journey = models.ManyToManyField(
         UserJourney, through="WaitingDetailsUser")
 
-    def __str__(self):
-        return self.user_journey.user.first_name
-
     class Meta:
         verbose_name = "Waiting List"
         verbose_name_plural = "Waiting Lists"

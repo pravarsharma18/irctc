@@ -15,6 +15,7 @@ django-celery-beat = "*"
 django-celery-results = "*"
 python-decouple = "*"
 autopep8 = "*"
+gunicorn = "*"
 
 [dev-packages]
 
