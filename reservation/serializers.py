@@ -25,7 +25,7 @@ class UserJourneySerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        print("validated_datavalidated_data", validated_data)
+        # print("validated_datavalidated_data", validated_data)
         max_date = datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)
         if validated_data['date'] > max_date:
             raise serializers.ValidationError(
@@ -39,13 +39,14 @@ class UserJourneySerializer(serializers.ModelSerializer):
                             does not runs on {validated_data['date'].strftime('%A')}"})
         else:
             reservation_obj = reservation_qs.first()
-            new_journey = UserJourney(**validated_data)
-            new_journey.save()
             if reservation_obj.vacant_seats > 0:
                 passengers_data = validated_data.pop('passengers')
                 validated_data['status'] = JourneyStatus.CONFIRMED.name
 
                 validated_data['user'] = self.context['request'].user
+
+                new_journey = UserJourney(**validated_data)
+                new_journey.save()
 
                 for passenger in passengers_data:
                     new_journey.passengers.add(passenger)
@@ -61,7 +62,7 @@ class UserJourneySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserJourney
-        fields = ['id', 'date', 'user', 'status', 'passengers',
+        fields = ['id', 'pnr', 'date', 'user', 'status', 'passengers',
                   'train', 'source_station', 'destination_station', 'passengers_list']
 
 
@@ -93,19 +94,10 @@ class ReservationChartForTrainSerializer(serializers.ModelSerializer):
 
     def get_passengers(sel, obj):
         return UserJourneySerializer(obj.user_journey.all(), many=True).data
-        print("*"*50)
-        print(a)
-        print("*"*50)
-
-        return {
-            "passengers": PassengerDetailSerializer(a.user_journey.all(), many=True).data
-        }
 
     def create(self, validated_data):
-        print(validated_data)
         chart_obj = ReservationChartForTrain.objects.filter(
             train=validated_data['train'])
-        print("chart_obj", chart_obj)
         if chart_obj.exists():
             raise serializers.ValidationError(
                 {"detail": "Chart Already Exists."})

@@ -23,7 +23,7 @@ class AdminCity(admin.ModelAdmin):
 
 @admin.register(Station)
 class AdminStation(admin.ModelAdmin):
-    list_display = ['id', 'name', 'city']
+    list_display = ['id', 'name', 'city', 'short_name']
 
 
 class AdminTrainWithStations(admin.TabularInline):
