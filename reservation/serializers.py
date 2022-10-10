@@ -19,6 +19,11 @@ class UserJourneySerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(source="user.email")
     status = serializers.StringRelatedField(read_only=True)
     passengers_list = serializers.SerializerMethodField()
+    pnr = serializers.StringRelatedField(read_only=True)
+    source_station = serializers.CharField(source='source_station.name')
+    destination_station = serializers.CharField(
+        source='destination_station.name')
+    train = serializers.CharField(source='train.name')
 
     def get_passengers_list(self, obj):
         return PassengerDetailSerializer(obj.passengers.all(), many=True).data
