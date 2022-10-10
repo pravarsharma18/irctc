@@ -16,6 +16,7 @@
           class="form-control"
           name="source_station"
           placeholder="City / Short Name"
+          required
         />
       </div>
       <div class="mb-3">
@@ -27,6 +28,17 @@
           class="form-control"
           name="destination_station"
           placeholder="City / Short Name"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Date</label>
+        <input
+          type="date"
+          class="form-control"
+          name="date"
+          placeholder="Date"
+          required
         />
       </div>
       <div class="col-12">
@@ -56,7 +68,8 @@
     console.log(url);
     let [res, json] = await _$.Fetch(url, (props = {}), (isArray = true));
     if (res.ok) {
-      console.log(json["results"]);
+      if (json["results"].length <= 0)
+        return $("#display-trains").html("No trains Found");
       $("#display-trains").html(
         json["results"].map((t) => {
           return `<div class="col-3"><div class="card" style="width: 18rem;">
@@ -70,7 +83,7 @@
         })
       );
     } else {
-      alert(JSON.stringify(json));
+      alert(json["detail"]);
     }
   });
 </script>

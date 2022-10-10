@@ -161,9 +161,9 @@
           let trainNumber = e.target.getAttribute("data-id");
           let res = await _$.Fetch(`/api/train_details/${trainNumber}/`);
           let body = `
-                        ${res
-                          .map((e) => {
-                            return `<div class="overflow-auto mb-10">
+                            ${res
+                              .map((e) => {
+                                return `<div class="overflow-auto mb-10">
                                 <!--begin::Item-->
                                 <div class="d-flex align-items-center mb-7">
                                     <!--begin::List content-->
@@ -180,10 +180,9 @@
                                 <!--end::Item-->
 
                             </div>`;
-                          })
-                          .join("\n")}
+                              })
+                              .join("\n")}
                     `;
-          console.log(body);
           modal_ = _$.crModal(
             `Detail - ${trainNumber}`,
             body,

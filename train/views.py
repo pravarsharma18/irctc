@@ -6,11 +6,15 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
+
+from base.choices import Constants
 
 from .models import Train
 from .permissions import CreatePermission
 from .serializers import TrainSerializer
 from .filters import TrainFilters
+from datetime import datetime, timedelta
 
 
 class TrainViewSet(viewsets.ModelViewSet):
@@ -21,12 +25,6 @@ class TrainViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'number', 'station__name']
     permission_classes = [CreatePermission]
     lookup_field = 'number'
-
-    def get_queryset(self, *args, **kwargs):
-        if self.request.query_params:
-            if not self.request.query_params.get('source_station') and not self.request.query_params.get('destination_station'):
-                return Train.objects.none()
-        return super().get_queryset()
 
 
 def get_search(request):
