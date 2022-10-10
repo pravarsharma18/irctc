@@ -22,6 +22,12 @@ class TrainViewSet(viewsets.ModelViewSet):
     permission_classes = [CreatePermission]
     lookup_field = 'number'
 
+    def get_queryset(self, *args, **kwargs):
+        if self.request.query_params:
+            if not self.request.query_params.get('source_station') and not self.request.query_params.get('destination_station'):
+                return Train.objects.none()
+        return super().get_queryset()
+
 
 def get_search(request):
     return render(request, 'train/index.html', {})

@@ -16,6 +16,7 @@ django-celery-results = "*"
 python-decouple = "*"
 autopep8 = "*"
 gunicorn = "*"
+pytest = "*"
 
 [dev-packages]
 

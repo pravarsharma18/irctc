@@ -1,41 +1,40 @@
-import django_filters
 from django_filters import rest_framework as filters
 
-from django.db.models import Count, Value, Q, F, OuterRef, Subquery
-
-
-from .models import Train, Station, TrainWithStations
+from .models import Train, TrainWithStations
 
 
 class TrainFilters(filters.FilterSet):
-    def filter_stations(queryset, name, value):
-        print("source***************", queryset, name, value)
+    def source_station(queryset, name, value):
         if not value:
             return queryset
-        source = ""
-        destination = ""
-        try:
-            source = value.split(',')[0]
-            destination = value.split(',')[1]
-        except:
-            pass
 
-        train_queryset = queryset.filter(
-            Q(station__name__icontains=source.strip()) and Q(
-                station__name__icontains=destination.strip())
-        )
+        train_queryset = queryset.filter(station__name__icontains=value)
 
         if train_queryset.exists():
             return train_queryset
-        return queryset
+
+        return train_queryset
+
+    def destination_station(queryset, name, value):
+
+        train_qs = TrainWithStations.objects.filter(
+            station__city__name__icontains=value).order_by('-sequence')
+        if train_qs.exists():
+            final_train = train_qs[0]
+            return queryset.filter(number=final_train.train.number)
+
+        return train_qs
 
     source_station = filters.CharFilter(
-        field_name='stations', method=filter_stations)
+        field_name='source_station', method=source_station)
+
+    destination_station = filters.CharFilter(
+        field_name='destination_station', method=destination_station)
 
     class Meta:
         model = Train
         distinct = True
         fields = {
-            'name': ['icontains'],
-            'number': ['exact'],
+            # 'name': ['icontains'],
+            # 'number': ['exact'],
         }

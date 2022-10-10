@@ -85,3 +85,8 @@ class TrainWithStations(TimeStampedModel):
     sequence = models.IntegerField()
     distance = models.DecimalField(max_digits=5, decimal_places=2)
     base_fare = models.DecimalField(max_digits=5, decimal_places=2)
+    arrival = models.TimeField()
+    departure = models.TimeField()
+
+    class Meta:
+        ordering = ['train__number', 'sequence']

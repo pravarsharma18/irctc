@@ -182,3 +182,5 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 # AUTHENTICATION_BACKENDS = ('users.models.AuthBackend',)
+
+MAIN_URL = "http://localhost:8000/"

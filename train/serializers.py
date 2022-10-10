@@ -14,7 +14,8 @@ class TrainWithStationsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TrainWithStations
-        fields = ['station', 'sequence', 'distance', 'base_fare']
+        fields = ['station', 'sequence', 'distance',
+                  'base_fare', 'arrival', 'departure']
 
 
 class TrainSerializer(serializers.ModelSerializer):
