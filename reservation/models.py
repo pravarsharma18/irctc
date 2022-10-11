@@ -85,7 +85,7 @@ class ReservationChartForTrain(TimeStampedModel):
     date = models.DateField()
 
     def __str__(self):
-        return str(self.user_journey)  # .user.first_name
+        return str(self.user_journey)
 
     class Meta:
         verbose_name = "Reservation Chart For Train"

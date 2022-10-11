@@ -28,8 +28,11 @@ class TrainFilters(filters.FilterSet):
             Q(station__short_name__icontains=value)
         ).order_by('-sequence')
         if train_qs.exists():
+            t_number = []
+            for i in train_qs:
+                t_number.append(i.train.number)
             final_train = train_qs[0]
-            return queryset.filter(number=final_train.train.number)
+            return queryset.filter(number__in=t_number)
 
         return train_qs
 

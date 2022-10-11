@@ -1,10 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 
-<div
-  class="content flex-row container"
-  id="kt_content"
-  style="margin-right: unset"
->
+<div class="flex-row container" id="kt_content" style="margin-right: unset">
   <div class="d-inline-flex m-5 p-5 flex-column border">
     <form id="filter-train">
       <div class="mb-3">
@@ -16,6 +12,7 @@
           class="form-control"
           name="source_station"
           placeholder="City / Short Name"
+          value="awr"
           required
         />
       </div>
@@ -28,6 +25,7 @@
           class="form-control"
           name="destination_station"
           placeholder="City / Short Name"
+          value="adi"
           required
         />
       </div>
@@ -35,6 +33,7 @@
         <label for="formGroupExampleInput2" class="form-label">Date</label>
         <input
           type="date"
+          value="2022-10-19"
           class="form-control"
           name="date"
           placeholder="Date"
@@ -76,12 +75,41 @@
             <div class="card-body">
               <h5 class="card-title">${t.name}</h5>
               <h6 class="card-subtitle mb-2 text-muted">${t.number}</h6>
-              <p class="card-text"></p>
-              <a href="#" class="card-link">Book Now</a>
+              <h6 id="vacent-seats_${t.number}"></h6>
+              <a href="javascript:void(0);" data-id="${t.number}" id="refresh-train_${t.number}" class="card-text float-end refresh-train" >
+                <i class="fa fa-refresh" aria-hidden="true">
+                </i>
+              </a>
+              <a id="book-now_${t.number}" href="javascript:void(0);" style="display:none;" class="card-link">Book Now</a>
             </div>
           </div></div>`;
         })
       );
+      $(".refresh-train").click(async (c) => {
+        let trainNumbers = json["results"].map((t) => {
+          return t.number;
+        });
+        //console.log(trainNumbers);
+        let date = params.date;
+        console.log(trainNumbers, date);
+        json["results"].map(async (t) => {
+          let url = `/api/reservations/chartfortrain/?train__number__icontains=${t.number}&date=${date}`;
+          let [res, json] = await _$.Fetch(url, (props = {}), (isArray = true));
+          if (res.ok) {
+            trainObj = json["results"];
+            $(`#vacent-seats_${t.number}`).html(
+              trainObj.map((e) => {
+                if (e.vacant_seats > 0) {
+                  $(`#book-now_${t.number}`).show();
+                  return `<span>${e.vacant_seats}</span><span class='text-success mx-5'>AVAILABLE</span>`;
+                } else {
+                  return `<span>${e.vacant_seats}</span><span class='text-danger mx-5'>WAITING</span>`;
+                }
+              })
+            );
+          }
+        });
+      });
     } else {
       alert(json["detail"]);
     }

@@ -162,27 +162,27 @@
           let res = await _$.Fetch(`/api/train/${trainNumber}/`);
           console.log(res.stations);
           let body = `
-                            ${res.stations
-                              .map((e) => {
-                                return `<div class="overflow-auto mb-10">
-                                <!--begin::Item-->
-                                <div class="d-flex align-items-center mb-7">
-                                    <!--begin::List content-->
-                                    <div class="d-flex flex-column min-w-150px me-4">
-                                        <a href="javascript:void(0);" data-id="${res.number}" class="train-detail fw-boldest text-gray-800 text-hover-primary fs-4">${res.name}</a>
-                                        <div class="fw-bold fs-6 text-gray-400">${res.number}</div>
-                                    </div>
-                                    <!--end::List content-->
-                                    <!--begin::Price-->
-                                    <div class="ms-auto bg-light fw-bolder py-1 px-3">${e.station}<br />Arrival: ${e.arrival}<br />Distance: ${e.distance}</div>
-                                    <div class="ms-auto bg-light fw-bolder py-1 px-3">${e.station}<br />Departure: ${e.departure}<br />Distance: ${e.distance}</div>
-                                    <!--end::Price-->
-                                </div>
-                                <!--end::Item-->
+                  ${res.stations
+                    .map((e) => {
+                      return `<div class="overflow-auto mb-10">
+                      <!--begin::Item-->
+                      <div class="d-flex align-items-center mb-7">
+                          <!--begin::List content-->
+                          <div class="d-flex flex-column min-w-150px me-4">
+                              <a href="javascript:void(0);" data-id="${res.number}" class="train-detail fw-boldest text-gray-800 text-hover-primary fs-4">${res.name}</a>
+                              <div class="fw-bold fs-6 text-gray-400">${res.number}</div>
+                          </div>
+                          <!--end::List content-->
+                          <!--begin::Price-->
+                          <div class="ms-auto bg-light fw-bolder py-1 px-3">${e.station}<br />Arrival: ${e.arrival}<br />Distance: ${e.distance}</div>
+                          <div class="ms-auto bg-light fw-bolder py-1 px-3">${e.station}<br />Departure: ${e.departure}<br />Distance: ${e.distance}</div>
+                          <!--end::Price-->
+                      </div>
+                      <!--end::Item-->
 
-                            </div>`;
-                              })
-                              .join("\n")}
+                  </div>`;
+                    })
+                    .join("\n")}
                     `;
           modal_ = _$.crModal(
             `Detail - ${trainNumber}`,

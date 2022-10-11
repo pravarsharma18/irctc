@@ -20,10 +20,10 @@ class UserJourneySerializer(serializers.ModelSerializer):
     status = serializers.StringRelatedField(read_only=True)
     passengers_list = serializers.SerializerMethodField()
     pnr = serializers.StringRelatedField(read_only=True)
-    source_station = serializers.CharField(source='source_station.name')
-    destination_station = serializers.CharField(
-        source='destination_station.name')
-    train = serializers.CharField(source='train.name')
+    # source_station = serializers.CharField(source='source_station.name')
+    # destination_station = serializers.CharField(
+    #     source='destination_station.name')
+    # train = serializers.CharField(source='train.name')
 
     def get_passengers_list(self, obj):
         return PassengerDetailSerializer(obj.passengers.all(), many=True).data
@@ -85,7 +85,7 @@ class ReservationChartForTrainSerializer(serializers.ModelSerializer):
     train = serializers.SerializerMethodField()
     # vacant_seats = serializers.IntegerField(read_only=True)
     # total_seats = serializers.IntegerField(read_only=True)
-    passengers = serializers.SerializerMethodField()
+    tickets = serializers.SerializerMethodField()
 
     # def get_user_journey(self, obj):
     #     print(obj.user_journey.all())
@@ -97,8 +97,24 @@ class ReservationChartForTrainSerializer(serializers.ModelSerializer):
             "number": obj.train.number
         }
 
-    def get_passengers(sel, obj):
-        return UserJourneySerializer(obj.user_journey.all(), many=True).data
+    def get_tickets(sel, obj):
+        print(obj.user_journey.all())
+        data = []
+        for user_j in obj.user_journey.all():
+            data.append({
+                'id': user_j.id,
+                'pnr': user_j.pnr,
+                'user': user_j.user.email,
+                'status': user_j.status,
+                'from': user_j.source_station.name,
+                'to': user_j.destination_station.name,
+                'passengers': [{'first_name': passenger.first_name, 'last_name': passenger.last_name,
+                               'age': passenger.age, 'gender': passenger.gender, 'birth': passenger.birth_preference} for passenger in user_j.passengers.all()]
+
+            })
+
+        # return UserJourneySerializer(obj.user_journey.all(), many=True).data
+        return data
 
     def create(self, validated_data):
         chart_obj = ReservationChartForTrain.objects.filter(
@@ -113,4 +129,4 @@ class ReservationChartForTrainSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReservationChartForTrain
         fields = ['id', 'train', 'date', 'total_seats',
-                  'vacant_seats', 'passengers']
+                  'vacant_seats', 'tickets']
