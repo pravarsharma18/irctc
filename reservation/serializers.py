@@ -98,7 +98,6 @@ class ReservationChartForTrainSerializer(serializers.ModelSerializer):
         }
 
     def get_tickets(sel, obj):
-        print(obj.user_journey.all())
         data = []
         for user_j in obj.user_journey.all():
             data.append({
@@ -112,7 +111,6 @@ class ReservationChartForTrainSerializer(serializers.ModelSerializer):
                                'age': passenger.age, 'gender': passenger.gender, 'birth': passenger.birth_preference} for passenger in user_j.passengers.all()]
 
             })
-
         # return UserJourneySerializer(obj.user_journey.all(), many=True).data
         return data
 
