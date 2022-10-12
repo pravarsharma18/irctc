@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from train.models import Train, City
 from base.choices import JourneyStatus, BirthPreference, Gender
 
 User = get_user_model()
@@ -34,13 +33,13 @@ class UserJourney(TimeStampedModel):
     passengers = models.ManyToManyField(
         PassengerDetail, related_name='passengers', through='Reservation')
     train = models.ForeignKey(
-        Train, related_name="train", on_delete=models.CASCADE)
+        'train.Train', related_name="train", on_delete=models.CASCADE)
     date = models.DateField()
     status = models.CharField(choices=JourneyStatus.choices(), max_length=15)
     source_station = models.ForeignKey(
-        City, related_name="source_station", on_delete=models.CASCADE)
+        'train.City', related_name="source_station", on_delete=models.CASCADE)
     destination_station = models.ForeignKey(
-        City, related_name="destination_station", on_delete=models.CASCADE)
+        'train.City', related_name="destination_station", on_delete=models.CASCADE)
     boggy_number = models.CharField(max_length=50, null=True, blank=True)
     seat_number = models.CharField(max_length=50, null=True, blank=True)
 
@@ -78,7 +77,7 @@ class WaitingDetailsUser(models.Model):
 
 class ReservationChartForTrain(TimeStampedModel):
     user_journey = models.ManyToManyField(UserJourney, blank=True)
-    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    train = models.ForeignKey('train.Train', on_delete=models.CASCADE)
     total_seats = models.IntegerField()
     vacant_seats = models.IntegerField()
     waiting_list = models.ManyToManyField(WaitingList, blank=True)

@@ -17,6 +17,7 @@ python-decouple = "*"
 autopep8 = "*"
 gunicorn = "*"
 pytest = "*"
+numpy = "*"
 
 [dev-packages]
 

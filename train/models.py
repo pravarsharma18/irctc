@@ -1,8 +1,14 @@
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
-from base.choices import Days, TrainType
+from base.choices import Days, PassengerSeats, TrainType, TotalSeats
 from multiselectfield import MultiSelectField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from datetime import datetime
+
+from reservation.models import ReservationChartForTrain
 
 
 class State(TimeStampedModel):
@@ -90,3 +96,76 @@ class TrainWithStations(TimeStampedModel):
 
     class Meta:
         ordering = ['train__number', 'sequence']
+
+
+class Boggy(TimeStampedModel):
+    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    ac1 = models.IntegerField()
+    ac2 = models.IntegerField()
+    ac3 = models.IntegerField()
+    sleeper = models.IntegerField()
+    date = models.DateField()
+
+    def __str__(self) -> str:
+        return self.train.name
+
+
+class Berth(TimeStampedModel):
+    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    lower = models.IntegerField(null=True, blank=True)
+    middle = models.IntegerField(null=True, blank=True)
+    upper = models.IntegerField(null=True, blank=True)
+    side_upper = models.IntegerField(null=True, blank=True)
+    side_lower = models.IntegerField(null=True, blank=True)
+    date = models.DateField()
+
+    def __str__(self) -> str:
+        return self.name
+
+
+# Signal to Create Bert of all the Boggies of a Train on a Particular Day.
+@receiver(post_save, sender=Boggy)
+def update_stock(sender, instance, **kwargs):
+    reservation_chart = ReservationChartForTrain.objects.filter(
+        train=instance.train)
+    if reservation_chart.exists():
+        for res_obj in reservation_chart:
+            for index in range(1, instance.ac1+1):
+                berth_obj = Berth.objects.filter(
+                    train=instance.train, name=f"A-{index}", date=res_obj.date)
+                if not berth_obj:
+                    berth_obj = Berth()
+                    berth_obj.train = instance.train
+                    berth_obj.name = f"A-{index}"
+                    berth_obj.lower = PassengerSeats.AC1_LOWER.value
+                    berth_obj.upper = PassengerSeats.AC1_UPPER.value
+                    berth_obj.date = res_obj.date
+                    berth_obj.save()
+            for index in range(1, instance.ac2+1):
+                berth_obj = Berth.objects.filter(
+                    train=instance.train, name=f"B-{index}", date=res_obj.date)
+                if not berth_obj:
+                    berth_obj = Berth()
+                    berth_obj.train = instance.train
+                    berth_obj.name = f"B-{index}"
+                    berth_obj.lower = PassengerSeats.AC2_LOWER.value
+                    berth_obj.upper = PassengerSeats.AC2_UPPER.value
+                    berth_obj.side_upper = PassengerSeats.AC2_SIDE_UPPER.value
+                    berth_obj.side_lower = PassengerSeats.AC2_SIDE_LOWER.value
+                    berth_obj.date = res_obj.date
+                    berth_obj.save()
+            for index in range(1, instance.ac3+1):
+                berth_obj = Berth.objects.filter(
+                    train=instance.train, name=f"C-{index}", date=res_obj.date)
+                if not berth_obj:
+                    berth_obj = Berth()
+                    berth_obj.train = instance.train
+                    berth_obj.name = f"C-{index}"
+                    berth_obj.lower = PassengerSeats.AC3_LOWER.value
+                    berth_obj.middle = PassengerSeats.AC3_MIDDLE.value
+                    berth_obj.upper = PassengerSeats.AC3_UPPER.value
+                    berth_obj.side_upper = PassengerSeats.AC3_SIDE_UPPER.value
+                    berth_obj.side_lower = PassengerSeats.AC3_SIDE_LOWER.value
+                    berth_obj.date = res_obj.date
+                    berth_obj.save()

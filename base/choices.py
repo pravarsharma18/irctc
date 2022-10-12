@@ -40,10 +40,12 @@ class JourneyStatus(Enum):
 
 
 class BirthPreference(Enum):
-    LOWER = "Lower"
-    MIDDLE = "Middle"
-    UPPER = "Upper"
-    SIDEUPPER = 'Sideupper'
+    LOWER = "Lower Berth"
+    MIDDLE = "Middle Berth"
+    UPPER = "Upper Berth"
+    SIDELOWER = "Side Lower Berth"
+    SIDEMIDDLE = "Side Middle Berth"
+    SIDEUPPER = "Side Upper Berth"
 
     @classmethod
     def choices(cls):
@@ -80,6 +82,35 @@ class Fare(Enum):
     AC3_FAST = 800
     SLEEPER_SUPERFAST = 800
     SLEEPER_FAST = 400
+
+    @classmethod
+    def choices(cls):
+        return tuple((fare.name, fare.value) for fare in cls)
+
+
+class TotalSeats(Enum):
+    AC1 = 5
+    AC2 = 5
+    AC3 = 5
+    SLEEPER = 5
+
+    @classmethod
+    def choices(cls):
+        return tuple((fare.name, fare.value) for fare in cls)
+
+
+class PassengerSeats(Enum):
+    AC1_LOWER = 14
+    AC1_UPPER = 14
+    AC2_LOWER = 15
+    AC2_UPPER = 15
+    AC2_SIDE_UPPER = 8
+    AC2_SIDE_LOWER = 8
+    AC3_LOWER = 16
+    AC3_MIDDLE = 16
+    AC3_UPPER = 16
+    AC3_SIDE_UPPER = 8
+    AC3_SIDE_LOWER = 8
 
     @classmethod
     def choices(cls):

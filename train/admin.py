@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import State, City, Station, Train, TrainWithStations
+from .models import (State, City, Station, Train,
+                     TrainWithStations, Boggy, Berth)
 
 
 @admin.register(State)
@@ -41,3 +42,13 @@ class AdminTrain(admin.ModelAdmin):
 @admin.register(TrainWithStations)
 class AdminTrainWithStations(admin.ModelAdmin):
     list_display = ['station', 'train', 'sequence', 'distance']
+
+
+@admin.register(Boggy)
+class AdminBoggy(admin.ModelAdmin):
+    list_display = ['train', 'date']
+
+
+@admin.register(Berth)
+class AdminBerth(admin.ModelAdmin):
+    list_display = ['train', 'name', 'date']

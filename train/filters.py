@@ -1,51 +1,62 @@
 from rest_framework.exceptions import ValidationError
 from django_filters import rest_framework as filters
 
+from .utils import sequence_filter
+
 from .models import Train, TrainWithStations
 from datetime import datetime, timedelta
 from base.choices import Constants
 from django.db.models import Q
+import numpy as np
 
 
 class TrainFilters(filters.FilterSet):
-    def source_station(queryset, name, value):
+    def stations(queryset, name, value):
         if not value:
             return queryset
+        source = ""
+        destination = ""
+        try:
+            source = value.split(',')[0]
+            destination = value.split(',')[1]
+        except:
+            raise ValidationError(
+                {"detail": "Please enter source as well as destination."})
 
-        train_queryset = queryset.filter(
-            Q(station__name__icontains=value) |
-            Q(station__short_name__icontains=value)
+        source_queryset = TrainWithStations.objects.filter(
+            Q(station__name__icontains=source.strip())
+        )
+        destination_queryset = TrainWithStations.objects.filter(
+            Q(station__name__icontains=destination.strip())
         )
 
-        if train_queryset.exists():
-            return train_queryset
+        seq_index, source_list = sequence_filter(
+            source_queryset, destination_queryset)
 
-        return train_queryset
-
-    def destination_station(queryset, name, value):
-        train_qs = TrainWithStations.objects.filter(
-            Q(station__city__name__icontains=value) |
-            Q(station__short_name__icontains=value)
-        ).order_by('-sequence')
-        if train_qs.exists():
+        source_queryset = TrainWithStations.objects.filter(
+            sequence=source_list[seq_index], station__name__icontains=source.strip())
+        if source_queryset.exists():
             t_number = []
-            for i in train_qs:
+            for i in source_queryset:
                 t_number.append(i.train.number)
-            final_train = train_qs[0]
             return queryset.filter(number__in=t_number)
 
-        return train_qs
+        return source_queryset
 
     def date(queryset, name, value):
         if value > (datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)):
             raise ValidationError(
                 {"detail": f"Can't book a train more than {Constants.BOOKING_FOR_NEXT_DAYS} days."})
         return queryset
-    source_station = filters.CharFilter(
-        field_name='source_station', method=source_station)
 
-    destination_station = filters.CharFilter(
-        field_name='destination_station', method=destination_station)
+    source_station = filters.CharFilter(
+        field_name='source_station', method=stations)
+
+    # source_station = filters.CharFilter(
+    #     field_name='source_station', method=source_station)
+
+    # destination_station = filters.CharFilter(
+    #     field_name='destination_station', method=destination_station)
 
     date = filters.DateFilter(
         field_name='date', method=date)
