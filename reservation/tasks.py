@@ -9,8 +9,9 @@ from train.models import Berth, Boggy, Train
 @shared_task(name=f"Chart for next {Constants.BOOKING_FOR_NEXT_DAYS} days.")
 def chart_for_next_BOOKING_FOR_NEXT_DAYS_days():
     train_qs = Train.objects.singles()
-    for date in (datetime.now().date() + timedelta(days) for days in range(Constants.BOOKING_FOR_NEXT_DAYS)):
-        reservation_qs = ReservationChartForTrain.objects.filter(date=date)
+    for date in (datetime.now().date() + timedelta(days) for days in range(Constants.BOOKING_FOR_NEXT_DAYS+1)):
+        reservation_qs = ReservationChartForTrain.objects.filter(
+            train__in=train_qs, date=date)
         if not reservation_qs.exists():
             bulk_list = []
             for train in train_qs:

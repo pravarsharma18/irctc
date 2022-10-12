@@ -160,7 +160,6 @@
         $(".train-detail").click(async (e) => {
           let trainNumber = e.target.getAttribute("data-id");
           let res = await _$.Fetch(`/api/train/${trainNumber}/`);
-          console.log(res.stations);
           let body = `
                   ${res.stations
                     .map((e) => {

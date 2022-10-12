@@ -12,7 +12,7 @@
           class="form-control"
           name="source_station"
           placeholder="City / Short Name"
-          value="awr"
+          value="alwar"
           required
         />
       </div>
@@ -25,7 +25,7 @@
           class="form-control"
           name="destination_station"
           placeholder="City / Short Name"
-          value="adi"
+          value="ahmedabad"
           required
         />
       </div>
@@ -33,7 +33,7 @@
         <label for="formGroupExampleInput2" class="form-label">Date</label>
         <input
           type="date"
-          value="2022-10-19"
+          value="2022-10-22"
           class="form-control"
           name="date"
           placeholder="Date"
@@ -55,16 +55,21 @@
   let form = $("#filter-train");
   form.submit(async (e) => {
     e.preventDefault();
-    let params = {};
-    $(form.serializeArray()).each(function (index, obj) {
-      params[obj.name] = obj.value;
-    });
+    source_station = $("input[name='source_station']").val();
+    destination_station = $("input[name='destination_station']").val();
+    date = $("input[name='date']").val();
+    station = source_station + "," + destination_station;
+
+    let params = {
+      station: station,
+      date: date,
+    };
 
     let url = new URL("{{url}}api/train/");
+
     Object.keys(params).forEach((key) =>
       url.searchParams.append(key, params[key])
     );
-    console.log(url);
     let [res, json] = await _$.Fetch(url, (props = {}), (isArray = true));
     if (res.ok) {
       if (json["results"].length <= 0)

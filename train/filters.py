@@ -7,7 +7,6 @@ from .models import Train, TrainWithStations
 from datetime import datetime, timedelta
 from base.choices import Constants
 from django.db.models import Q
-import numpy as np
 
 
 class TrainFilters(filters.FilterSet):
@@ -35,6 +34,7 @@ class TrainFilters(filters.FilterSet):
 
         source_queryset = TrainWithStations.objects.filter(
             sequence=source_list[seq_index], station__name__icontains=source.strip())
+
         if source_queryset.exists():
             t_number = []
             for i in source_queryset:
@@ -49,7 +49,7 @@ class TrainFilters(filters.FilterSet):
                 {"detail": f"Can't book a train more than {Constants.BOOKING_FOR_NEXT_DAYS} days."})
         return queryset
 
-    source_station = filters.CharFilter(
+    station = filters.CharFilter(
         field_name='source_station', method=stations)
 
     # source_station = filters.CharFilter(
