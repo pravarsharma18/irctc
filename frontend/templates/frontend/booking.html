@@ -1,53 +1,55 @@
 {% extends 'base.html' %} {% block content %}
 
 <div class="flex-row container" id="kt_content" style="margin-right: unset">
-  <div class="d-inline-flex m-5 p-5 flex-column border">
-    <form id="filter-train">
-      <div class="mb-3">
-        <label for="formGroupExampleInput" class="form-label"
-          >Source Station</label
-        >
-        <input
-          type="text"
-          class="form-control"
-          name="source_station"
-          placeholder="City / Short Name"
-          value="alwar"
-          required
-        />
+  <div class="row">
+    <div class="col-3">
+      <div class="d-inline-flex m-5 p-5 flex-column border">
+        <form id="filter-train">
+          <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label"
+              >Source Station</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              name="source_station"
+              placeholder="City / Short Name"
+              value="alwar"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label"
+              >Destination Station</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              name="destination_station"
+              placeholder="City / Short Name"
+              value="ahmedabad"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="formGroupExampleInput2" class="form-label">Date</label>
+            <input
+              type="date"
+              value="2022-10-22"
+              class="form-control"
+              name="date"
+              placeholder="Date"
+            />
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">Go</button>
+          </div>
+        </form>
       </div>
-      <div class="mb-3">
-        <label for="formGroupExampleInput2" class="form-label"
-          >Destination Station</label
-        >
-        <input
-          type="text"
-          class="form-control"
-          name="destination_station"
-          placeholder="City / Short Name"
-          value="ahmedabad"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="formGroupExampleInput2" class="form-label">Date</label>
-        <input
-          type="date"
-          value="2022-10-22"
-          class="form-control"
-          name="date"
-          placeholder="Date"
-          required
-        />
-      </div>
-      <div class="col-12">
-        <button type="submit" class="btn btn-primary">Go</button>
-      </div>
-    </form>
-  </div>
-
-  <div class="d-inline-flex justify-content-between" id="display-trains">
-    Please search your Train
+    </div>
+    <div class="col">
+      <div class="row" id="display-trains">Please search your Train</div>
+    </div>
   </div>
 </div>
 {% endblock content %} {% block js %}
@@ -76,16 +78,23 @@
         return $("#display-trains").html("No trains Found");
       $("#display-trains").html(
         json["results"].map((t) => {
-          return `<div class="col-3"><div class="card" style="width: 18rem;">
+          return `<div class="col-12 mt-5"><div class="card">
             <div class="card-body">
               <h5 class="card-title">${t.name}</h5>
               <h6 class="card-subtitle mb-2 text-muted">${t.number}</h6>
               <h6 id="vacent-seats_${t.number}"></h6>
-              <a href="javascript:void(0);" data-id="${t.number}" id="refresh-train_${t.number}" class="card-text float-end refresh-train" >
+              <a href="javascript:void(0);" data-id="${
+                t.number
+              }" id="refresh-train_${
+            t.number
+          }" class="card-text float-end refresh-train" >
                 <i class="fa fa-refresh" aria-hidden="true">
                 </i>
               </a>
-              <a id="book-now_${t.number}" href="javascript:void(0);" style="display:none;" class="card-link">Book Now</a>
+              <p>Runs On - ${t.runs_on.map((e) => e[0]).join(" ")}</p>
+              <a id="book-now_${
+                t.number
+              }" href="javascript:void(0);" style="display:none;" class="card-link">Book Now</a>
             </div>
           </div></div>`;
         })
@@ -94,7 +103,6 @@
         let trainNumbers = json["results"].map((t) => {
           return t.number;
         });
-        //console.log(trainNumbers);
         let date = params.date;
         console.log(trainNumbers, date);
         json["results"].map(async (t) => {
@@ -102,6 +110,7 @@
           let [res, json] = await _$.Fetch(url, (props = {}), (isArray = true));
           if (res.ok) {
             trainObj = json["results"];
+            console.log(trainObj);
             $(`#vacent-seats_${t.number}`).html(
               trainObj.map((e) => {
                 if (e.vacant_seats > 0) {

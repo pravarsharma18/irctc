@@ -77,7 +77,8 @@ class WaitingDetailsUser(models.Model):
 
 class ReservationChartForTrain(TimeStampedModel):
     user_journey = models.ManyToManyField(UserJourney, blank=True)
-    train = models.ForeignKey('train.Train', on_delete=models.CASCADE)
+    train = models.ForeignKey(
+        'train.Train', related_name='reservation_charts', on_delete=models.CASCADE)
     total_seats = models.IntegerField()
     vacant_seats = models.IntegerField()
     waiting_list = models.ManyToManyField(WaitingList, blank=True)
