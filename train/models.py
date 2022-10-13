@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from datetime import datetime
+from base.choices import BoggyName
 
 from reservation.models import ReservationChartForTrain
 
@@ -133,22 +134,22 @@ def update_stock(sender, instance, **kwargs):
         for res_obj in reservation_chart:
             for index in range(1, instance.ac1+1):
                 berth_obj = Berth.objects.filter(
-                    train=instance.train, name=f"A-{index}", date=res_obj.date)
+                    train=instance.train, name=f"{BoggyName.AC1.value}-{index}", date=res_obj.date)
                 if not berth_obj:
                     berth_obj = Berth()
                     berth_obj.train = instance.train
-                    berth_obj.name = f"A-{index}"
+                    berth_obj.name = f"{BoggyName.AC1.value}-{index}"
                     berth_obj.lower = PassengerSeats.AC1_LOWER.value
                     berth_obj.upper = PassengerSeats.AC1_UPPER.value
                     berth_obj.date = res_obj.date
                     berth_obj.save()
             for index in range(1, instance.ac2+1):
                 berth_obj = Berth.objects.filter(
-                    train=instance.train, name=f"B-{index}", date=res_obj.date)
+                    train=instance.train, name=f"{BoggyName.AC2.value}-{index}", date=res_obj.date)
                 if not berth_obj:
                     berth_obj = Berth()
                     berth_obj.train = instance.train
-                    berth_obj.name = f"B-{index}"
+                    berth_obj.name = f"{BoggyName.AC2.value}-{index}"
                     berth_obj.lower = PassengerSeats.AC2_LOWER.value
                     berth_obj.upper = PassengerSeats.AC2_UPPER.value
                     berth_obj.side_upper = PassengerSeats.AC2_SIDE_UPPER.value
@@ -157,15 +158,29 @@ def update_stock(sender, instance, **kwargs):
                     berth_obj.save()
             for index in range(1, instance.ac3+1):
                 berth_obj = Berth.objects.filter(
-                    train=instance.train, name=f"C-{index}", date=res_obj.date)
+                    train=instance.train, name=f"{BoggyName.AC3.value}-{index}", date=res_obj.date)
                 if not berth_obj:
                     berth_obj = Berth()
                     berth_obj.train = instance.train
-                    berth_obj.name = f"C-{index}"
+                    berth_obj.name = f"{BoggyName.AC3.value}-{index}"
                     berth_obj.lower = PassengerSeats.AC3_LOWER.value
                     berth_obj.middle = PassengerSeats.AC3_MIDDLE.value
                     berth_obj.upper = PassengerSeats.AC3_UPPER.value
                     berth_obj.side_upper = PassengerSeats.AC3_SIDE_UPPER.value
                     berth_obj.side_lower = PassengerSeats.AC3_SIDE_LOWER.value
+                    berth_obj.date = res_obj.date
+                    berth_obj.save()
+            for index in range(1, instance.sleeper+1):
+                berth_obj = Berth.objects.filter(
+                    train=instance.train, name=f"{BoggyName.SLEEPER.value}-{index}", date=res_obj.date)
+                if not berth_obj:
+                    berth_obj = Berth()
+                    berth_obj.train = instance.train
+                    berth_obj.name = f"{BoggyName.SLEEPER.value}-{index}"
+                    berth_obj.lower = PassengerSeats.SLEEPER_LOWER.value
+                    berth_obj.middle = PassengerSeats.SLEEPER_MIDDLE.value
+                    berth_obj.upper = PassengerSeats.SLEEPER_UPPER.value
+                    berth_obj.side_upper = PassengerSeats.SLEEPER_SIDE_UPPER.value
+                    berth_obj.side_lower = PassengerSeats.SLEEPER_SIDE_LOWER.value
                     berth_obj.date = res_obj.date
                     berth_obj.save()

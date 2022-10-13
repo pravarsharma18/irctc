@@ -53,6 +53,9 @@ class TrainFilters(filters.FilterSet):
         if value > (datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)):
             raise ValidationError(
                 {"detail": f"Can't book a train more than {Constants.BOOKING_FOR_NEXT_DAYS} days."})
+
+        queryset = queryset.filter(
+            runs_on__contains=value.strftime('%A').upper())
         """
             Logic to get the next and previous date trains
         

@@ -39,7 +39,7 @@ class JourneyStatus(Enum):
         return tuple((j_status.name, j_status.value) for j_status in cls)
 
 
-class BirthPreference(Enum):
+class BerthPreference(Enum):
     LOWER = "Lower Berth"
     MIDDLE = "Middle Berth"
     UPPER = "Upper Berth"
@@ -88,6 +88,17 @@ class Fare(Enum):
         return tuple((fare.name, fare.value) for fare in cls)
 
 
+class BoggyName(Enum):
+    AC1 = "A"
+    AC2 = "B"
+    AC3 = "C"
+    SLEEPER = "S"
+
+    @classmethod
+    def choices(cls):
+        return tuple((fare.name, fare.value) for fare in cls)
+
+
 class TotalSeats(Enum):
     AC1 = 5
     AC2 = 5
@@ -111,6 +122,11 @@ class PassengerSeats(Enum):
     AC3_UPPER = 16
     AC3_SIDE_UPPER = 8
     AC3_SIDE_LOWER = 8
+    SLEEPER_LOWER = 18
+    SLEEPER_MIDDLE = 18
+    SLEEPER_UPPER = 18
+    SLEEPER_SIDE_UPPER = 9
+    SLEEPER_SIDE_LOWER = 9
 
     @classmethod
     def choices(cls):

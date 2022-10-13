@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
+from train.models import Berth
+
 from .models import PassengerDetail, Reservation, UserJourney, ReservationChartForTrain, WaitingList
 from datetime import datetime, timedelta
-from base.choices import Constants, JourneyStatus
+from base.choices import BerthPreference, BoggyName, Coaches, Constants, JourneyStatus
 from django.db import transaction
 
 
@@ -10,7 +12,7 @@ class PassengerDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassengerDetail
         fields = ['id', 'first_name', 'last_name',
-                  'age', 'gender', 'birth_preference']
+                  'age', 'gender', 'berth_preference']
 
 
 class UserJourneySerializer(serializers.ModelSerializer):
@@ -30,18 +32,20 @@ class UserJourneySerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
+        date = validated_data['date']
+        train = validated_data['train']
         # print("validated_datavalidated_data", validated_data)
         max_date = datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)
-        if validated_data['date'] > max_date:
+        if date > max_date:
             raise serializers.ValidationError(
                 {"detail": f"Can only book a Train for next {Constants.BOOKING_FOR_NEXT_DAYS} days."})
 
         reservation_qs = ReservationChartForTrain.objects.filter(
-            date=validated_data['date'], train=validated_data['train'])
+            date=date, train=train)
         if not reservation_qs.exists():
             raise serializers.ValidationError(
-                {"detail": f"{validated_data['train'].name} numbered {validated_data['train'].number} \
-                            does not runs on {validated_data['date'].strftime('%A')}"})
+                {"detail": f"{train.name} numbered {train.number} \
+                            does not runs on {date.strftime('%A')}"})
         else:
             reservation_obj = reservation_qs.first()
             if reservation_obj.vacant_seats > 0:
@@ -54,6 +58,18 @@ class UserJourneySerializer(serializers.ModelSerializer):
                 new_journey.save()
 
                 for passenger in passengers_data:
+                    berth = passenger.berth_preference
+                    quota = passenger.quota
+
+                    berth_obj = Berth.objects.filter(
+                        date=date, train__number=train.number)
+                    fields = {
+                        '{0}__{1}'.format('name', 'icontains'): getattr(BoggyName, '%s' % quota).value,
+                        '{0}__{1}'.format(berth.lower(), 'gt'): 0,
+                    }
+                    berth_obj = berth_obj.filter(
+                        **fields).order_by('?').first()
+
                     new_journey.passengers.add(passenger)
                     reservation_obj.vacant_seats -= 1
                 reservation_obj.user_journey.add(new_journey)
@@ -108,7 +124,7 @@ class ReservationChartForTrainSerializer(serializers.ModelSerializer):
                 'from': user_j.source_station.name,
                 'to': user_j.destination_station.name,
                 'passengers': [{'first_name': passenger.first_name, 'last_name': passenger.last_name,
-                               'age': passenger.age, 'gender': passenger.gender, 'birth': passenger.birth_preference} for passenger in user_j.passengers.all()]
+                               'age': passenger.age, 'gender': passenger.gender, 'berth': passenger.berth_preference} for passenger in user_j.passengers.all()]
 
             })
         # return UserJourneySerializer(obj.user_journey.all(), many=True).data

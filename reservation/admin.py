@@ -6,7 +6,7 @@ from .models import Reservation, UserJourney, WaitingList, ReservationChartForTr
 
 @admin.register(PassengerDetail)
 class AdminPassengerDetail(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'age', 'birth_preference']
+    list_display = ['first_name', 'last_name', 'age', 'berth_preference']
 
 
 class AdminReservation(admin.TabularInline):

@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from base.choices import JourneyStatus, BirthPreference, Gender
+from base.choices import Coaches, JourneyStatus, BerthPreference, Gender
 
 User = get_user_model()
 
@@ -15,8 +15,9 @@ class PassengerDetail(TimeStampedModel):
     last_name = models.CharField(max_length=255)
     age = models.IntegerField()
     gender = models.CharField(max_length=15, choices=Gender.choices())
-    birth_preference = models.CharField(
-        max_length=15, choices=BirthPreference.choices(), null=True, blank=True)
+    quota = models.CharField(max_length=15, choices=Coaches.choices())
+    berth_preference = models.CharField(
+        max_length=15, choices=BerthPreference.choices(), null=True, blank=True)
 
     def __str__(self) -> str:
         return self.first_name
