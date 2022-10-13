@@ -66,6 +66,9 @@ class TrainManager(models.Manager):
     def singles(self):
         return self.get_queryset().singles()
 
+    def get_total_seats(self):
+        return self.get_queryset().filter()
+
 
 class Train(TimeStampedModel):
     name = models.CharField(max_length=255)
@@ -99,6 +102,22 @@ class TrainWithStations(TimeStampedModel):
         ordering = ['train__number', 'sequence']
 
 
+class BoggyQuerySet(models.QuerySet):
+    def get_seats(self):
+        return self
+
+    # def editors(self):
+    #     return self.filter(role='E')
+
+
+class BoggyManager(models.Manager):
+    def get_queryset(self):
+        return BoggyQuerySet(self.model, using=self._db)
+
+    def total_seats(self, train_number, date):
+        return self.get_queryset().filter(train__number=train_number, date=date)
+
+
 class Boggy(TimeStampedModel):
     train = models.ForeignKey(Train, on_delete=models.CASCADE)
     ac1 = models.IntegerField()
@@ -106,6 +125,8 @@ class Boggy(TimeStampedModel):
     ac3 = models.IntegerField()
     sleeper = models.IntegerField()
     date = models.DateField()
+
+    objects = BoggyManager()
 
     def __str__(self) -> str:
         return self.train.name
