@@ -80,8 +80,8 @@ class ReservationChartForTrain(TimeStampedModel):
     user_journey = models.ManyToManyField(UserJourney, blank=True)
     train = models.ForeignKey(
         'train.Train', related_name='reservation_charts', on_delete=models.CASCADE)
-    total_seats = models.IntegerField()
-    vacant_seats = models.IntegerField()
+    total_seats = models.IntegerField(default=0)
+    vacant_seats = models.IntegerField(default=0)
     waiting_list = models.ManyToManyField(WaitingList, blank=True)
     date = models.DateField()
 

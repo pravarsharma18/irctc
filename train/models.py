@@ -1,5 +1,6 @@
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
+from django.db.models import Sum
 
 from base.choices import Days, PassengerSeats, TrainType, TotalSeats
 from multiselectfield import MultiSelectField
@@ -8,6 +9,7 @@ from django.dispatch import receiver
 
 from datetime import datetime
 from base.choices import BoggyName
+
 
 from reservation.models import ReservationChartForTrain
 
@@ -66,8 +68,20 @@ class TrainManager(models.Manager):
     def singles(self):
         return self.get_queryset().singles()
 
-    def get_total_seats(self):
-        return self.get_queryset().filter()
+    def get_total_seats(self, number, date):
+        final_sum = (Sum('ac1')*(PassengerSeats.AC1_LOWER.value+PassengerSeats.AC2_UPPER.value)) \
+            + (Sum('ac2')*(PassengerSeats.AC2_LOWER.value+PassengerSeats.AC2_UPPER.value +
+                           PassengerSeats.AC2_SIDE_UPPER.value + PassengerSeats.AC2_SIDE_LOWER.value))  \
+            + (Sum('ac3')*(PassengerSeats.AC3_LOWER.value+PassengerSeats.AC3_UPPER.value +
+                           PassengerSeats.AC3_MIDDLE.value + PassengerSeats.AC3_SIDE_UPPER.value +
+                           PassengerSeats.AC3_SIDE_LOWER.value)) \
+            + (Sum('ac3')*(PassengerSeats.AC3_LOWER.value+PassengerSeats.AC3_UPPER.value +
+                           PassengerSeats.AC3_MIDDLE.value + PassengerSeats.AC3_SIDE_UPPER.value +
+                           PassengerSeats.AC3_SIDE_LOWER.value)) \
+            + (Sum('sleeper')*(PassengerSeats.SLEEPER_LOWER.value+PassengerSeats.SLEEPER_MIDDLE.value +
+                               PassengerSeats.SLEEPER_UPPER.value + PassengerSeats.SLEEPER_SIDE_UPPER.value +
+                               PassengerSeats.SLEEPER_SIDE_LOWER.value))
+        return Boggy.objects.total_seats(number, date).aggregate(total_seats=final_sum)
 
 
 class Train(TimeStampedModel):
@@ -147,7 +161,7 @@ class Berth(TimeStampedModel):
 
 
 # Signal to Create Bert of all the Boggies of a Train on a Particular Day.
-@receiver(post_save, sender=Boggy)
+@ receiver(post_save, sender=Boggy)
 def update_stock(sender, instance, **kwargs):
     reservation_chart = ReservationChartForTrain.objects.filter(
         train=instance.train)

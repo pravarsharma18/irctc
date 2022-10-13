@@ -13,14 +13,16 @@ def chart_for_next_BOOKING_FOR_NEXT_DAYS_days():
         reservation_qs = ReservationChartForTrain.objects.filter(
             train__in=train_qs, date=date)
         if not reservation_qs.exists():
-            bulk_list = []
+            bulk_list = list()
             for train in train_qs:
                 for days in train.runs_on:
                     if (days.title() == date.strftime('%A')):
                         res_objs = ReservationChartForTrain()
                         res_objs.train = train
-                        res_objs.total_seats = Constants.TOTAL_SEATS
-                        res_objs.vacant_seats = Constants.TOTAL_SEATS
+                        res_objs.total_seats = Train.objects.get_total_seats(
+                            train.number, date).get('total_seats', 0)
+                        res_objs.vacant_seats = Train.objects.get_total_seats(
+                            train.number, date).get('total_seats', 0)
                         res_objs.date = date
                         bulk_list.append(res_objs)
             ReservationChartForTrain.objects.bulk_create(bulk_list)
