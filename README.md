@@ -2,9 +2,16 @@
 
 ## Project Setup
 
-```
-pipenv install
-```
+- installing dependencies
+  ```
+  pipenv install
+  python manage.py migrate
+  python manage.py createsuperuser
+  ```
+- Celery beat command
+  ```
+  celery -A irctc worker -l info --beat
+  ```
 
 ## Main Models:
 
