@@ -50,7 +50,7 @@ class TrainFilters(filters.FilterSet):
         return source_queryset
 
     def date(queryset, name, value):
-        if value > (datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)):
+        if value >= (datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)):
             raise ValidationError(
                 {"detail": f"Cannot book a train more than {Constants.BOOKING_FOR_NEXT_DAYS} days from Todays' date"})
 

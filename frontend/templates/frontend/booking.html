@@ -72,7 +72,12 @@
     Object.keys(params).forEach((key) =>
       url.searchParams.append(key, params[key])
     );
-    let [res, json] = await _$.Fetch(url, (props = {}), (isArray = true));
+    let [res, json] = await _$.Fetch(
+      url,
+      (props = {}),
+      (headers = {}),
+      (isArray = true)
+    );
     if (res.ok) {
       if (json["results"].length <= 0)
         return $("#display-trains").html("No trains Found");
@@ -107,7 +112,16 @@
         console.log(trainNumbers, date);
         json["results"].map(async (t) => {
           let url = `/api/reservations/chartfortrain/?train__number__icontains=${t.number}&date=${date}`;
-          let [res, json] = await _$.Fetch(url, (props = {}), (isArray = true));
+          let props = {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          };
+          let [res, json] = await _$.Fetch(
+            url,
+            (isArray = true),
+            (props = props)
+          );
           if (res.ok) {
             trainObj = json["results"];
             console.log(trainObj);

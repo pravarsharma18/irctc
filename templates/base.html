@@ -71,23 +71,34 @@
     <script src="{% static 'assets/js/custom/widgets.js' %}"></script>
     <script src="{% static 'assets/js/custom/index.js' %}"></script>
     <script src="{% static 'assets/js/magicsuggest.js' %}"></script>
-
-    {% block js %} {% endblock js %}
     <script>
-      $("#signout").click(async (e) => {
+      let signout = document.getElementById("signout");
+      $("#signout").on("click", async (e) => {
         e.preventDefault();
-        let keysToRemove = ["accessToken", "refreshToken"];
-        for (key of keysToRemove) {
-          localStorage.removeItem(key);
-        }
+        props = {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        };
+
         let [res, json] = await _$.Fetch(
           "/users/logout/",
-          { method: "POST" },
-          (isArray = true)
+          (isArray = true),
+          (props = props)
         );
-        window.location.href = "/signin/";
+        if (res.ok) {
+          let keysToRemove = ["accessToken", "refreshToken"];
+          for (key of keysToRemove) {
+            localStorage.removeItem(key);
+          }
+          window.location.href = "/signin/";
+        } else {
+          alert(json.detail);
+        }
       });
     </script>
+    {% block js %} {% endblock js %}
     <!--end::Page Custom Javascript-->
     <!--end::Javascript-->
   </body>
