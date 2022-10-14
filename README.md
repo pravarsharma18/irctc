@@ -5,7 +5,11 @@
 - Installing Dependencies
   ```
   pipenv install
+  ```
+  ```
   python manage.py migrate
+  ```
+  ```
   python manage.py createsuperuser
   ```
 - Celery beat command
@@ -56,4 +60,4 @@ If Boggies are modified i.e, if (only) increased the number of coaches count, it
 ## Logic
 
 1. BOOKING_FOR_NEXT_DAYS flag responsible for booking a train, right now it is set to 10 days.
-2. Filtering of train by source, destination and date.
+2. Filtering train by source, destination and date.
