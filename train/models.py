@@ -51,15 +51,6 @@ class TrainQuerySet(models.QuerySet):
     def singles(self):
         return self.filter().distinct('number')
 
-
-class TrainManager(models.Manager):
-
-    def get_queryset(self):
-        return TrainQuerySet(self.model, using=self._db)
-
-    def singles(self):
-        return self.get_queryset().singles()
-
     def get_total_seats(self, number, date):
         final_sum = (Sum('ac1')*(PassengerSeats.AC1_LOWER.value+PassengerSeats.AC2_UPPER.value)) \
             + (Sum('ac2')*(PassengerSeats.AC2_LOWER.value+PassengerSeats.AC2_UPPER.value +
@@ -74,6 +65,18 @@ class TrainManager(models.Manager):
                                PassengerSeats.SLEEPER_UPPER.value + PassengerSeats.SLEEPER_SIDE_UPPER.value +
                                PassengerSeats.SLEEPER_SIDE_LOWER.value))
         return Boggy.objects.total_seats(number, date).aggregate(total_seats=final_sum)
+
+
+class TrainManager(models.Manager):
+
+    def get_queryset(self):
+        return TrainQuerySet(self.model, using=self._db)
+
+    def singles(self):
+        return self.get_queryset().singles()
+
+    def get_total_seats(self):
+        return self.get_queryset().get_total_seats()
 
 
 class Train(TimeStampedModel):
