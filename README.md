@@ -27,8 +27,8 @@
   #### Logic
 
   - Train model has Station as many to many field, which is managed by "through" model TrainWithStations, having sequence, distance, base fare, arrival time, departure time, This will be helpful for the ordering the train vai source and destination and vice versa.
-  - Train model's queryset manager also has 'singles' filter objects to get the single train distinct vai number.
-  - Train model's queryset manager also has 'get_total_seats' filter which calculates the sum of all the
+  - Train model's queryset manager also has 'singles' method to get the single train distinct vai number.
+  - Train model's queryset manager also has 'get_total_seats' method which calculates the sum of all the seats in a particular train given on a particular date.
 
 - ### reservation APP
 
@@ -43,7 +43,7 @@
 - ### base App
   Contains all the constants used in the project in choices.py file.
 
-## Clery Logic
+## Celery Logic
 
 1. Creation of Boggy triggers signals to Berth model.
    a) Berth objects created as per the Boggy fields of AC1, AC2 and so on.
