@@ -188,3 +188,5 @@ REST_FRAMEWORK = {
 # AUTHENTICATION_BACKENDS = ('users.models.AuthBackend',)
 
 MAIN_URL = "http://localhost:8000/"
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
