@@ -16,6 +16,7 @@ class PassengerDetail(TimeStampedModel):
     quota = models.CharField(max_length=15, choices=Coaches.choices())
     berth_preference = models.CharField(
         max_length=15, choices=BerthPreference.choices(), null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
 
     def __str__(self) -> str:
         return self.first_name

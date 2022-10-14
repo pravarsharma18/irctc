@@ -1,3 +1,4 @@
+from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 
 from train.models import Berth
@@ -12,10 +13,24 @@ class PassengerDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassengerDetail
         fields = ['id', 'first_name', 'last_name',
-                  'age', 'gender', 'berth_preference']
+                  'age', 'gender', 'quota', 'berth_preference']
+
+    def validate(self, attrs):
+        if attrs['quota'] == Coaches.AC1.name:
+            if attrs['berth_preference'] in [BerthPreference.MIDDLE.name,
+                                             BerthPreference.SIDE_LOWER.name,
+                                             BerthPreference.SIDE_UPPER.name]:
+                raise ValidationError(
+                    {"detail": f"{attrs['quota']} doest not have {attrs['berth_preference']} berth."})
+
+        if attrs['quota'] == Coaches.AC2.name:
+            if attrs['berth_preference'] in [BerthPreference.MIDDLE.name]:
+                raise ValidationError(
+                    {"detail": f"{attrs['quota']} doest not have {attrs['berth_preference']} berth."})
+        return attrs
 
 
-class UserJourneySerializer(serializers.ModelSerializer):
+class TicketSerializer(serializers.ModelSerializer):
     passengers = serializers.PrimaryKeyRelatedField(queryset=PassengerDetail.objects.all(),
                                                     many=True, write_only=True)
     user = serializers.StringRelatedField(source="user.email")
@@ -34,18 +49,20 @@ class UserJourneySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         date = validated_data['date']
         train = validated_data['train']
+        passengers = validated_data['passengers']
         # print("validated_datavalidated_data", validated_data)
         max_date = datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)
         if date > max_date:
             raise serializers.ValidationError(
                 {"detail": f"Can only book a Train for next {Constants.BOOKING_FOR_NEXT_DAYS} days."})
-
+        if len(passengers) <= 0:
+            raise serializers.ValidationError(
+                {"detail": "Must have valid passengers"})
         reservation_qs = ReservationChartForTrain.objects.filter(
             date=date, train=train)
         if not reservation_qs.exists():
             raise serializers.ValidationError(
-                {"detail": f"{train.name} numbered {train.number} \
-                            does not runs on {date.strftime('%A')}"})
+                {"detail": f"{train.name} numbered {train.number} does not runs on {date.strftime('%A')}"})
         else:
             reservation_obj = reservation_qs.first()
             if reservation_obj.vacant_seats > 0:
@@ -64,12 +81,15 @@ class UserJourneySerializer(serializers.ModelSerializer):
                     berth_obj = Berth.objects.filter(
                         date=date, train__number=train.number)
                     fields = {
-                        '{0}__{1}'.format('name', 'icontains'): getattr(BoggyName, '%s' % quota).value,
-                        '{0}__{1}'.format(berth.lower(), 'gt'): 0,
+                        'name__icontains': getattr(BoggyName, '%s' % quota).value,
+                        f'{berth.lower()}__gt': 0,
                     }
                     berth_obj = berth_obj.filter(
-                        **fields).order_by('?').first()
+                        **fields).first()
 
+                    setattr(berth_obj, berth.lower(), int(
+                        getattr(berth_obj, berth.lower()) - 1))
+                    berth_obj.save()
                     new_journey.passengers.add(passenger)
                     reservation_obj.vacant_seats -= 1
                 reservation_obj.user_journey.add(new_journey)

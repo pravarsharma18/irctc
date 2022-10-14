@@ -43,9 +43,8 @@ class BerthPreference(Enum):
     LOWER = "Lower Berth"
     MIDDLE = "Middle Berth"
     UPPER = "Upper Berth"
-    SIDELOWER = "Side Lower Berth"
-    SIDEMIDDLE = "Side Middle Berth"
-    SIDEUPPER = "Side Upper Berth"
+    SIDE_LOWER = "Side Lower Berth"
+    SIDE_UPPER = "Side Upper Berth"
 
     @classmethod
     def choices(cls):
