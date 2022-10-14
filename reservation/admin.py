@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Reservation, UserJourney, WaitingList, ReservationChartForTrain, PassengerDetail, WaitingDetailsUser
+from .models import Reservation, Ticket, WaitingList, ReservationChartForTrain, PassengerDetail, WaitingDetailsUser
 # Register your models here.
 
 
@@ -15,7 +15,7 @@ class AdminReservation(admin.TabularInline):
     # extra = 1
 
 
-@admin.register(UserJourney)
+@admin.register(Ticket)
 class AdminUserJourney(admin.ModelAdmin):
     list_display = ['pnr', 'user']
     list_select_related = ('train',)

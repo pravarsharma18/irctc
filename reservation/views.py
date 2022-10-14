@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 from .filters import ReservationChartFilters
-from .models import PassengerDetail, Reservation, UserJourney, ReservationChartForTrain
+from .models import PassengerDetail, Reservation, Ticket, ReservationChartForTrain
 from .serializers import (PassengerDetailSerializer, ReservationSerializer,
                           ReservationChartForTrainSerializer, UserJourneySerializer)
 
@@ -16,7 +16,7 @@ class PassengerDetailViewSet(viewsets.ModelViewSet):
 
 
 class UserJourneyViewSet(viewsets.ModelViewSet):
-    queryset = UserJourney.objects.all()
+    queryset = Ticket.objects.all()
     serializer_class = UserJourneySerializer
 
 

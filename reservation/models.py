@@ -25,7 +25,7 @@ class PassengerDetail(TimeStampedModel):
         verbose_name_plural = "Passenger Details"
 
 
-class UserJourney(TimeStampedModel):
+class Ticket(TimeStampedModel):
     pnr = models.IntegerField(null=True, blank=True)
     user = models.ForeignKey(
         User, related_name="passenger", on_delete=models.CASCADE)
@@ -50,12 +50,12 @@ class UserJourney(TimeStampedModel):
 class Reservation(TimeStampedModel):
     passenger_detail = models.ForeignKey(
         PassengerDetail, on_delete=models.CASCADE)
-    user_journey = models.ForeignKey(UserJourney, on_delete=models.CASCADE)
+    user_journey = models.ForeignKey(Ticket, on_delete=models.CASCADE)
 
 
 class WaitingList(TimeStampedModel):
     user_journey = models.ManyToManyField(
-        UserJourney, through="WaitingDetailsUser")
+        Ticket, through="WaitingDetailsUser")
 
     class Meta:
         verbose_name = "Waiting List"
@@ -64,12 +64,12 @@ class WaitingList(TimeStampedModel):
 
 class WaitingDetailsUser(models.Model):
     waiting_list = models.ForeignKey(WaitingList, on_delete=models.CASCADE)
-    user_journey = models.ForeignKey(UserJourney, on_delete=models.CASCADE)
+    user_journey = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     waiting_number = models.IntegerField()
 
 
 class ReservationChartForTrain(TimeStampedModel):
-    user_journey = models.ManyToManyField(UserJourney, blank=True)
+    user_journey = models.ManyToManyField(Ticket, blank=True)
     train = models.ForeignKey(
         'train.Train', related_name='reservation_charts', on_delete=models.CASCADE)
     total_seats = models.IntegerField(null=True, blank=True)

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from train.models import Berth
 
-from .models import PassengerDetail, Reservation, UserJourney, ReservationChartForTrain, WaitingList
+from .models import PassengerDetail, Reservation, Ticket, ReservationChartForTrain, WaitingList
 from datetime import datetime, timedelta
 from base.choices import BerthPreference, BoggyName, Coaches, Constants, JourneyStatus
 from django.db import transaction
@@ -54,7 +54,7 @@ class UserJourneySerializer(serializers.ModelSerializer):
 
                 validated_data['user'] = self.context['request'].user
 
-                new_journey = UserJourney(**validated_data)
+                new_journey = Ticket(**validated_data)
                 new_journey.save()
 
                 for passenger in passengers_data:
@@ -82,7 +82,7 @@ class UserJourneySerializer(serializers.ModelSerializer):
         return new_journey
 
     class Meta:
-        model = UserJourney
+        model = Ticket
         fields = ['id', 'pnr', 'date', 'user', 'status', 'passengers',
                   'train', 'source_station', 'destination_station', 'passengers_list']
 
