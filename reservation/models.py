@@ -2,8 +2,6 @@ import random
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 from django.contrib.auth import get_user_model
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
 
 from base.choices import Coaches, JourneyStatus, BerthPreference, Gender
 
@@ -53,12 +51,6 @@ class Reservation(TimeStampedModel):
     passenger_detail = models.ForeignKey(
         PassengerDetail, on_delete=models.CASCADE)
     user_journey = models.ForeignKey(UserJourney, on_delete=models.CASCADE)
-
-
-@receiver(pre_save, sender=UserJourney)
-def my_callback(sender, instance, *args, **kwargs):
-    if not instance.pnr:
-        instance.pnr = random.randint(10000000, 100000000)
 
 
 class WaitingList(TimeStampedModel):

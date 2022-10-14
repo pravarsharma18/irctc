@@ -1,4 +1,17 @@
-# Docs
+# IRCTC Similar App
+
+Main Models:
+
+- train APP:
+  - State
+  - City
+  - Station
+  - Train
+  - Boggy - Stores how many boggies can be attatch to a train on a Particular date
+  - Berth - Store the number of seats(L,M,U,SU,SL) in a Particular Boggy on a Particular date
+- reservation APP:
+  - PassengerDetail
+  - UserJourney
 
 Initializing the project- - pipenv install
 
