@@ -2,9 +2,9 @@
 
 ## Project Setup
 
-'''
+```
 pipenv install
-'''
+```
 
 ## Main Models:
 
