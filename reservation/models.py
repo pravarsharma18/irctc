@@ -43,8 +43,8 @@ class Ticket(TimeStampedModel):
     seat_number = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
-        verbose_name = "User Journey"
-        verbose_name_plural = "User Journeys"
+        verbose_name = "Ticket"
+        verbose_name_plural = "Tickets"
 
 
 class Reservation(TimeStampedModel):

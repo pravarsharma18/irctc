@@ -39,9 +39,9 @@ class AdminTrain(admin.ModelAdmin):
     ]
 
 
-@admin.register(TrainWithStations)
-class AdminTrainWithStations(admin.ModelAdmin):
-    list_display = ['station', 'train', 'sequence', 'distance']
+# @admin.register(TrainWithStations)
+# class AdminTrainWithStations(admin.ModelAdmin):
+#     list_display = ['station', 'train', 'sequence', 'distance']
 
 
 @admin.register(Boggy)

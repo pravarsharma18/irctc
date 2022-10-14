@@ -137,6 +137,11 @@ class Boggy(TimeStampedModel):
     def __str__(self) -> str:
         return self.train.name
 
+    class Meta:
+        verbose_name = "Boggy"
+        verbose_name_plural = "Boggies"
+        ordering = ['-date']
+
 
 class Berth(TimeStampedModel):
     train = models.ForeignKey(Train, on_delete=models.CASCADE)
@@ -150,3 +155,8 @@ class Berth(TimeStampedModel):
 
     def __str__(self) -> str:
         return self.name
+
+    class Meta:
+        verbose_name = "Berth"
+        verbose_name_plural = "Berths"
+        ordering = ['-date']

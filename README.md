@@ -1,4 +1,4 @@
-# IRCTC Similar App
+# Train Booking App
 
 ## Project Setup
 
