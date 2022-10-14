@@ -1,5 +1,11 @@
 # IRCTC Similar App
 
+## Project Setup
+
+'''
+pipenv install
+'''
+
 ## Main Models:
 
 - ### train APP
@@ -18,10 +24,9 @@
   - ReservationChartForTrain - Stores details of the passengerDetail, total seats, vacant_seats, waiting list if any for a particular date.
 
 - ### users App
+  - User - Inhertited from AbstractUser class for user login from username, mobile number as well as email.
 
-Initializing the project- - pipenv install
-
-Clery Logic
+## Clery Logic
 
 1. Creation of Boggy triggers signals to Berth model
    a) Berth objects created as per the Boggy fields of AC1, AC2 and so on.
