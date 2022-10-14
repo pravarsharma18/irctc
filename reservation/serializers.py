@@ -42,6 +42,16 @@ class TicketSerializer(serializers.ModelSerializer):
     #     source='destination_station.name')
     # train = serializers.CharField(source='train.name')
 
+    def validate(self, attr):
+        max_date = datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)
+        if attr['date'] > max_date:
+            raise serializers.ValidationError(
+                {"detail": f"Can only book a Train for next {Constants.BOOKING_FOR_NEXT_DAYS} days."})
+        if len(attr['passengers']) <= 0:
+            raise serializers.ValidationError(
+                {"detail": "Must have valid passengers"})
+        return attr
+
     def get_passengers_list(self, obj):
         return PassengerDetailSerializer(obj.passengers.all(), many=True).data
 
@@ -49,15 +59,6 @@ class TicketSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         date = validated_data['date']
         train = validated_data['train']
-        passengers = validated_data['passengers']
-        # print("validated_datavalidated_data", validated_data)
-        max_date = datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)
-        if date > max_date:
-            raise serializers.ValidationError(
-                {"detail": f"Can only book a Train for next {Constants.BOOKING_FOR_NEXT_DAYS} days."})
-        if len(passengers) <= 0:
-            raise serializers.ValidationError(
-                {"detail": "Must have valid passengers"})
         reservation_qs = ReservationChartForTrain.objects.filter(
             date=date, train=train)
         if not reservation_qs.exists():
