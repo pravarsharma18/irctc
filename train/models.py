@@ -75,8 +75,8 @@ class TrainManager(models.Manager):
     def singles(self):
         return self.get_queryset().singles()
 
-    def get_total_seats(self):
-        return self.get_queryset().get_total_seats()
+    def get_total_seats(self, number, date):
+        return self.get_queryset().get_total_seats(number, date)
 
 
 class Train(TimeStampedModel):

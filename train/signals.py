@@ -9,7 +9,7 @@ from .models import Boggy, Berth, Train
 # Signal to Create Bert of all the Boggies of a Train on a Particular Day.
 
 
-@ receiver(post_save, sender=Boggy)
+@receiver(post_save, sender=Boggy)
 def create_berths(sender, instance, **kwargs):
     ac1_bulk_list = []
     ac2_bulk_list = []
@@ -34,9 +34,9 @@ def create_berths(sender, instance, **kwargs):
         if not berth_obj:
             data = {
                 'train': instance.train,
-                'name': f"{BoggyName.AC1.value}-{index}",
-                'lower': PassengerSeats.AC1_LOWER.value,
-                'upper': PassengerSeats.AC1_UPPER.value,
+                'name': f"{BoggyName.AC2.value}-{index}",
+                'lower': PassengerSeats.AC2_LOWER.value,
+                'upper': PassengerSeats.AC2_UPPER.value,
                 'side_upper': PassengerSeats.AC2_SIDE_UPPER.value,
                 'side_lower': PassengerSeats.AC2_SIDE_LOWER.value,
                 'date': instance.date
@@ -79,7 +79,8 @@ def create_berths(sender, instance, **kwargs):
     # Update the total seats in ReservationChartForTrain model accordingly
     reservation_qs = ReservationChartForTrain.objects.filter(
         train=instance.train, date=instance.date)
-    if reservation_qs.exists():
+
+    try:
         reservation_obj = reservation_qs.first()
 
         total_seats = Train.objects.get_total_seats(
@@ -90,3 +91,5 @@ def create_berths(sender, instance, **kwargs):
         reservation_obj.total_seats = total_seats
         reservation_obj.vacant_seats += new_seats
         reservation_obj.save()
+    except:
+        pass

@@ -1,4 +1,5 @@
 from celery import shared_task
+from celery.signals import task_success
 from datetime import datetime, timedelta
 
 from base.choices import Constants, TotalSeats
@@ -6,7 +7,7 @@ from .models import ReservationChartForTrain
 from train.models import Berth, Boggy, Train
 
 
-# @shared_task(name=f"Create Boggy")
+@shared_task(name=f"Create Boggy")
 def create_boggy():
     for date in (datetime.now().date() + timedelta(days) for days in range(Constants.BOOKING_FOR_NEXT_DAYS)):
         train_qs = Train.objects.singles()
@@ -54,7 +55,7 @@ def chart_for_next_BOOKING_FOR_NEXT_DAYS_days():
           ReservationChartForTrain.objects.all().count())
 
 
-@shared_task(name=f"Chart Delete for Previous Day.")
+@shared_task(name=f"Delete Chart for Previous Day.")
 def chart_delete_for_previous_days():
 
     ReservationChartForTrain.objects.filter(
@@ -62,3 +63,11 @@ def chart_delete_for_previous_days():
 
     print("ReservationChartForTrain objects created, total: ",
           ReservationChartForTrain.objects.all().count())
+
+
+def trigger_task(*args, **kwargs):
+    chart_for_next_BOOKING_FOR_NEXT_DAYS_days.s().delay()
+
+
+task_success.connect(
+    trigger_task, sender=chart_for_next_BOOKING_FOR_NEXT_DAYS_days)

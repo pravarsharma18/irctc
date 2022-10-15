@@ -18,6 +18,7 @@ autopep8 = "*"
 gunicorn = "*"
 pytest = "*"
 numpy = "*"
+celery = {extras = ["django", "redis"], version = "*"}
 
 [dev-packages]
 

@@ -10,11 +10,6 @@ from django.db import transaction
 
 
 class PassengerDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PassengerDetail
-        fields = ['id', 'first_name', 'last_name',
-                  'age', 'gender', 'quota', 'berth_preference']
-
     def validate(self, attrs):
         if attrs['quota'] == Coaches.AC1.name:
             if attrs['berth_preference'] in [BerthPreference.MIDDLE.name,
@@ -28,6 +23,11 @@ class PassengerDetailSerializer(serializers.ModelSerializer):
                 raise ValidationError(
                     {"detail": f"{attrs['quota']} doest not have {attrs['berth_preference']} berth."})
         return attrs
+
+    class Meta:
+        model = PassengerDetail
+        fields = ['id', 'first_name', 'last_name',
+                  'age', 'gender', 'quota', 'berth_preference']
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -43,6 +43,7 @@ class TicketSerializer(serializers.ModelSerializer):
     # train = serializers.CharField(source='train.name')
 
     def validate(self, attr):
+        print(attr)
         max_date = datetime.now().date() + timedelta(days=Constants.BOOKING_FOR_NEXT_DAYS)
         if attr['date'] > max_date:
             raise serializers.ValidationError(
@@ -50,6 +51,10 @@ class TicketSerializer(serializers.ModelSerializer):
         if len(attr['passengers']) <= 0:
             raise serializers.ValidationError(
                 {"detail": "Must have valid passengers"})
+        train = attr['train']
+        source_station = attr['source_station']
+        destination_station = attr['destination_station']
+        # Train.objects.filter(number=train)
         return attr
 
     def get_passengers_list(self, obj):
@@ -76,6 +81,7 @@ class TicketSerializer(serializers.ModelSerializer):
                 new_journey.save()
 
                 for passenger in passengers_data:
+                    print(",.,.,", passenger.id)
                     berth = passenger.berth_preference
                     quota = passenger.quota
 
@@ -85,9 +91,10 @@ class TicketSerializer(serializers.ModelSerializer):
                         'name__icontains': getattr(BoggyName, '%s' % quota).value,
                         f'{berth.lower()}__gt': 0,
                     }
+                    print(fields)
                     berth_obj = berth_obj.filter(
                         **fields).first()
-
+                    print("******", berth_obj)
                     setattr(berth_obj, berth.lower(), int(
                         getattr(berth_obj, berth.lower()) - 1))
                     berth_obj.save()

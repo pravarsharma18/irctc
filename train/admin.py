@@ -52,3 +52,4 @@ class AdminBoggy(admin.ModelAdmin):
 @admin.register(Berth)
 class AdminBerth(admin.ModelAdmin):
     list_display = ['train', 'name', 'date']
+    list_filter = ('train', 'date')
