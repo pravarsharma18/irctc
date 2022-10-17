@@ -24,7 +24,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("", include('frontend.urls', namespace='frontend')),
-    path("users/", include('users.urls')),
     path("api/", include('train.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

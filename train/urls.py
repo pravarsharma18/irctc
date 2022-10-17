@@ -9,5 +9,6 @@ router.register(r'train', TrainViewSet)
 
 urlpatterns = [
     path('reservations/', include('reservation.urls')),
+    path("users/", include('users.urls')),
 ]
 urlpatterns += router.urls

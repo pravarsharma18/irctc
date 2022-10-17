@@ -1,83 +1,116 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="bg-dark text-light"><a href="/">Home</a></div>
 <div class="card card-custom h-100%">
-     <form class="mt-5 container" id="signup-form">
-         <div class="display-4 text-center">
-             SignUp
-         </div>
-         <div class="card-body">
-           <div class="form-group mt-5">
-                <label>Username<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="username" placeholder="Enter UserName"/>
-           </div>
-           <div class="form-group mt-5">
-                <label>Email address<span class="text-danger">*</span></label>
-                <input type="email" class="form-control" name="email" placeholder="Enter Email address"/>
-            </div>
-            <div class="form-group mt-5">
-                <label>Mobile<span class="text-danger">*</span></label>
-                <input type="number" class="form-control" name="mobile_number" placeholder="Enter Mobile Number"/>
-            </div>
-            <div class="form-group mt-5">
-                <label>First Name<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="first_name" placeholder="Enter First Name"/>
-            </div>
-            <div class="form-group mt-5">
-                <label>Last Name<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="last_name" placeholder="Enter Last Name"/>
-            </div>
-            <div class="form-group mt-5">
-                <label>Date of Birth<span class="text-danger">*</span></label>
-                <input type="date" class="form-control" name="date_of_birth" />
-            </div>
-            <div class="form-group mt-5">
-                <label for="exampleInputPassword1">Password <span class="text-danger">*</span></label>
-                <input type="password" name="password" class="form-control" placeholder="Password"/>
-           </div>
-           <div class="form-group mt-5">
-                <label for="exampleInputPassword1">Confirm Password<span class="text-danger">*</span></label>
-                <input type="password" name="password2" class="form-control" placeholder="Password Again"/>
-            </div>
-         </div>
-         <p>Already has account <a href="/signin/">signin</a></p>
-         <div class="mx-5">
-             <button type="submit" class="btn btn-primary mr-2">Submit</button>
-         </div>
-     </form>
+  <form class="mt-5 container" id="signup-form">
+    <div class="display-4 text-center">SignUp</div>
+    <div class="card-body">
+      <div class="form-group mt-5">
+        <label>Username<span class="text-danger">*</span></label>
+        <input
+          type="text"
+          class="form-control"
+          name="username"
+          placeholder="Enter UserName"
+        />
+      </div>
+      <div class="form-group mt-5">
+        <label>Email address<span class="text-danger">*</span></label>
+        <input
+          type="email"
+          class="form-control"
+          name="email"
+          placeholder="Enter Email address"
+        />
+      </div>
+      <div class="form-group mt-5">
+        <label>Mobile<span class="text-danger">*</span></label>
+        <input
+          type="number"
+          class="form-control"
+          name="mobile_number"
+          placeholder="Enter Mobile Number"
+        />
+      </div>
+      <div class="form-group mt-5">
+        <label>First Name<span class="text-danger">*</span></label>
+        <input
+          type="text"
+          class="form-control"
+          name="first_name"
+          placeholder="Enter First Name"
+        />
+      </div>
+      <div class="form-group mt-5">
+        <label>Last Name<span class="text-danger">*</span></label>
+        <input
+          type="text"
+          class="form-control"
+          name="last_name"
+          placeholder="Enter Last Name"
+        />
+      </div>
+      <div class="form-group mt-5">
+        <label>Date of Birth<span class="text-danger">*</span></label>
+        <input type="date" class="form-control" name="date_of_birth" />
+      </div>
+      <div class="form-group mt-5">
+        <label for="exampleInputPassword1"
+          >Password <span class="text-danger">*</span></label
+        >
+        <input
+          type="password"
+          name="password"
+          class="form-control"
+          placeholder="Password"
+        />
+      </div>
+      <div class="form-group mt-5">
+        <label for="exampleInputPassword1"
+          >Confirm Password<span class="text-danger">*</span></label
+        >
+        <input
+          type="password"
+          name="password2"
+          class="form-control"
+          placeholder="Password Again"
+        />
+      </div>
+    </div>
+    <p>Already has account <a href="/signin/">signin</a></p>
+    <div class="mx-5">
+      <button type="submit" class="btn btn-primary mr-2">Submit</button>
+    </div>
+  </form>
 </div>
-{% endblock content %}
-
-
-{% block js %}
+{% endblock content %} {% block js %}
 <script>
-let form = $('#signup-form')
+  let form = $("#signup-form");
 
-form.submit(async (e)=>{
-    e.preventDefault()
+  form.submit(async (e) => {
+    e.preventDefault();
     let bodyData = {};
-    $(form.serializeArray()).each(function(index, obj){
-        bodyData[obj.name] = obj.value;
+    $(form.serializeArray()).each(function (index, obj) {
+      bodyData[obj.name] = obj.value;
     });
-    console.log(bodyData)
+    console.log(bodyData);
     let props = {
-        method:'POST',
-        headers:{
-            'Content-Type':'application/json',
-        },
-        body:bodyData
-    }
-    
-    let [res, json] = await _$.Fetch('/users/signup/', props=props, isArray=true)
-    if (res.ok){
-        window.location.href = "/signin/"
-    }else{
-        alert(JSON.stringify(json))
-    }
-    
-    
-})
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: bodyData,
+    };
 
+    let [res, json] = await _$.Fetch(
+      "/api/users/signup/",
+      (props = props),
+      (isArray = true)
+    );
+    if (res.ok) {
+      window.location.href = "/signin/";
+    } else {
+      alert(JSON.stringify(json));
+    }
+  });
 </script>
 {% endblock js %}
