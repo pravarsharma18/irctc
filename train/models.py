@@ -144,19 +144,22 @@ class Boggy(TimeStampedModel):
 
 
 class Berth(TimeStampedModel):
-    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    train = models.ForeignKey(Train, on_delete=models.CASCADE, db_index=True)
     name = models.CharField(max_length=50)
     lower = models.IntegerField(null=True, blank=True)
     middle = models.IntegerField(null=True, blank=True)
     upper = models.IntegerField(null=True, blank=True)
     side_upper = models.IntegerField(null=True, blank=True)
     side_lower = models.IntegerField(null=True, blank=True)
-    date = models.DateField()
+    date = models.DateField(db_index=True)
 
     def __str__(self) -> str:
         return self.name
 
     class Meta:
+        # indexes = [
+        #     ['name']
+        # ]
         verbose_name = "Berth"
         verbose_name_plural = "Berths"
         ordering = ['-date']
