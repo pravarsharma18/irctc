@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-n^4(jr4=(jg&vwve-nmg-0wa$pxjw=n!cd-0icyey*2s6ix^23'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -65,7 +69,7 @@ CELERY_RESULT_BACKEND = "django-db"
 
 # This configures Redis as the datastore between Django + Celery
 CELERY_BROKER_URL = config('CELERY_BROKER_REDIS_URL',
-                           default='redis://localhost:6379')
+                           default=env('CELERY_BROKER_REDIS_URL'))
 # if you out to use os.environ the config is:
 # CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_REDIS_URL', 'redis://localhost:6379')
 
@@ -108,14 +112,7 @@ WSGI_APPLICATION = 'irctc.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'irctc',
-        'USER': 'pgadmin',
-        'PASSWORD': 'trootech1234',
-        'HOST': 'localhost',
-        'PORT': 5432
-    }
+    "default": env.db_url(),
 }
 
 
@@ -191,6 +188,6 @@ SIMPLE_JWT = {
 }
 # AUTHENTICATION_BACKENDS = ('users.models.AuthBackend',)
 
-MAIN_URL = "http://localhost:8000/"
+MAIN_URL = env("MAIN_URL")  # http://localhost:<port>/ for local
 
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
+DATA_UPLOAD_MAX_NUMBER_FIELDS = env('DATA_UPLOAD_MAX_NUMBER_FIELDS')

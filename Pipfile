@@ -19,6 +19,7 @@ gunicorn = "*"
 pytest = "*"
 numpy = "*"
 celery = {extras = ["django", "redis"], version = "*"}
+django-environ = "*"
 
 [dev-packages]
 
