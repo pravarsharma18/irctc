@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ec27872774507f6d0efb590c2a6b4d537794b5fb065ac44399af75aa50741eb0"
+            "sha256": "500bcd85067a2e5b1e1453b7b077e7a2d75af34b8c2fd347fa031e5ae9ff70bd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -137,19 +137,19 @@
         },
         "django": {
             "hashes": [
-                "sha256:0604e84c4fb698a5e53e5857b5aea945b2f19a18f25f10b8748dbdf935788927",
-                "sha256:21f0f9643722675976004eb683c55d33c05486f94506672df3d6a141546f389d"
+                "sha256:26dc24f99c8956374a054bcbf58aab8dc0cad2e6ac82b0fe036b752c00eee793",
+                "sha256:b8d843714810ab88d59344507d4447be8b2cf12a49031363b6eed9f1b9b2280f"
             ],
             "index": "pypi",
-            "version": "==3.2"
+            "version": "==4.1.2"
         },
         "django-celery-beat": {
             "hashes": [
-                "sha256:ba24f86ed956ba0ee2b43237a49303ebf5aa7e0fb0ccb7e0542b7e31a463dcba",
-                "sha256:ff694e1d30f84de3d2b78822c90005c6c7c1462768e845ae162af71a6a46f1eb"
+                "sha256:4eb0e8412e2e05ba0029912a6f80d1054731001eecbcb4d59688c4e07cf4d9d3",
+                "sha256:8a169e11d96faed8b72d505ddbc70e7fe0b16cdc854df43cb209c153ed08d651"
             ],
             "index": "pypi",
-            "version": "==2.3.0"
+            "version": "==2.1.0"
         },
         "django-celery-results": {
             "hashes": [
@@ -177,11 +177,11 @@
         },
         "django-timezone-field": {
             "hashes": [
-                "sha256:15746ed367a5a32eda76cfa2886eeec1de8cda79f519b7c5e12f87ed7cdbd663",
-                "sha256:199f211082eeac7e83563929b8ce41399c1c0f00dfc2f36bc00bea381027eaaa"
+                "sha256:5dd5bd9249382bef8847d3e7e4c32b7be182a4b538f354130d1252ed228892f8",
+                "sha256:7552d2b0f145684b7de3fb5046101c7efd600cc6ba951b15c630fa1e1b83558e"
             ],
-            "markers": "python_version >= '3.7' and python_full_version < '4.0.0'",
-            "version": "==5.0"
+            "markers": "python_version >= '3.5'",
+            "version": "==4.2.3"
         },
         "djangorestframework": {
             "hashes": [
@@ -536,14 +536,6 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==5.4.0"
-        },
-        "tzdata": {
-            "hashes": [
-                "sha256:323161b22b7802fdc78f20ca5f6073639c64f1a7227c40cd3e19fd1d0ce6650a",
-                "sha256:e15b2b3005e2546108af42a0eb4ccab4d9e225e2dfbf4f77aad50c70a4b1f3ab"
-            ],
-            "markers": "python_version >= '2'",
-            "version": "==2022.5"
         },
         "vine": {
             "hashes": [

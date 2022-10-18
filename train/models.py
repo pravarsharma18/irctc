@@ -85,7 +85,7 @@ class Train(TimeStampedModel):
     station = models.ManyToManyField(
         Station, related_name="stations", through='TrainWithStations')
     type = models.CharField(max_length=15, choices=TrainType.choices())
-    runs_on = MultiSelectField(choices=Days.choices())
+    runs_on = MultiSelectField(choices=Days.choices(), max_length=100)
 
     objects = TrainManager()
 
