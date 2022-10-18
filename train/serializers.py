@@ -1,5 +1,21 @@
 from rest_framework import serializers
-from .models import Train, Station, TrainWithStations
+from .models import Train, Station, TrainWithStations, State, City
+
+
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
+        fields = ['id', 'name']
+
+
+class CitySerializer(serializers.ModelSerializer):
+    display_state = serializers.StringRelatedField(source='state.name')
+    state = serializers.PrimaryKeyRelatedField(
+        queryset=State.objects.all(), write_only=True)
+
+    class Meta:
+        model = City
+        fields = ['id', 'name', 'display_state', 'state']
 
 
 class StationSerializer(serializers.ModelSerializer):

@@ -65,9 +65,9 @@ def chart_delete_for_previous_days():
           ReservationChartForTrain.objects.all().count())
 
 
-def trigger_task(*args, **kwargs):
-    chart_for_next_BOOKING_FOR_NEXT_DAYS_days.s().delay()
+# def trigger_task(*args, **kwargs):
+#     chart_for_next_BOOKING_FOR_NEXT_DAYS_days.s().delay()
 
 
-task_success.connect(
-    trigger_task, sender=chart_for_next_BOOKING_FOR_NEXT_DAYS_days)
+# task_success.connect(
+#     trigger_task, sender=chart_for_next_BOOKING_FOR_NEXT_DAYS_days)

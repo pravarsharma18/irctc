@@ -5,7 +5,7 @@ from reservation.models import ReservationChartForTrain
 
 from .utils import sequence_filter
 
-from .models import Train, TrainWithStations
+from .models import City, State, Train, TrainWithStations
 from datetime import datetime, timedelta
 from base.choices import Constants
 from django.db.models import Q
@@ -105,4 +105,23 @@ class TrainFilters(filters.FilterSet):
         fields = {
             'name': ['icontains'],
             'number': ['exact'],
+        }
+
+
+class CityFilters(filters.FilterSet):
+    class Meta:
+        model = City
+        distinct = True
+        fields = {
+            'name': ['icontains'],
+            'state__name': ['icontains'],
+        }
+
+
+class StateFilters(filters.FilterSet):
+    class Meta:
+        model = State
+        distinct = True
+        fields = {
+            'name': ['icontains'],
         }

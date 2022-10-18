@@ -2,8 +2,6 @@ import pytest
 from rest_framework import status
 from model_bakery import baker
 
-
-from base.choices import UserRole
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 

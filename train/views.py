@@ -5,10 +5,24 @@ from rest_framework import viewsets
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Train
+from .models import Train, State, City
 from .permissions import CreatePermission
-from .serializers import TrainSerializer
-from .filters import TrainFilters
+from .serializers import TrainSerializer, StateSerializer, CitySerializer
+from .filters import TrainFilters, CityFilters, StateFilters
+
+
+class StateViewSet(viewsets.ModelViewSet):
+    queryset = State.objects.all()
+    serializer_class = StateSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = StateFilters
+
+
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = CityFilters
 
 
 class TrainViewSet(viewsets.ModelViewSet):
